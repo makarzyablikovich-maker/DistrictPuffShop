@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>DistrictPuff</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --bg: #0b0b0f;
+      --card: #15151c;
+      --card-elevated: #1c1c26;
+      --card-border: #262633;
+      --text: #f4f4f5;
+      --hint: #9ca3af;
+      --accent: #8b5cf6;
+      --accent-glow: rgba(139, 92, 246, 0.28);
+      --accent-soft: rgba(139, 92, 246, 0.15);
+      --green: #4ade80;
+      --green-soft: rgba(74, 222, 128, 0.14);
+      --fire: #fb923c;
+      --danger: #f87171;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 10% 0%, rgba(139, 92, 246, 0.14), transparent 40%),
+        radial-gradient(circle at 90% 15%, rgba(249, 115, 22, 0.08), transparent 35%);
+      color: var(--text);
+      padding: 16px 16px 100px;
+      min-height: 100vh;
+    }
+
+    /* Шапка */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .brand-wrap { display: flex; align-items: center; gap: 8px; }
+    .brand-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 12px var(--accent);
+    }
+    .brand { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+    .brand span { color: var(--accent); }
+    .status-pill {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      background: var(--green-soft);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      padding: 5px 10px;
+      border-radius: 20px;
+    }
+
+    /* Баннер распродажи */
+    .sale-banner {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(139, 92, 246, 0.16));
+      border: 1px solid rgba(248, 113, 113, 0.4);
+      border-radius: 16px;
+      padding: 13px 15px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .sale-banner strong { display: block; font-size: 14px; color: #fca5a5; margin-bottom: 4px; }
+    .sale-banner span { font-size: 12px; color: #e4e4e7; font-weight: 500; }
+
+    /* Вкладки контента */
+    .tab-content { display: none; animation: fadeIn 0.2s ease; }
+    .tab-content.active { display: block; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Фильтры категорий */
+    .categories {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 12px;
+      margin-bottom: 4px;
+      scrollbar-width: none;
+    }
+    .categories::-webkit-scrollbar { display: none; }
+    .cat-btn {
+      white-space: nowrap;
+      padding: 9px 14px;
+      border-radius: 13px;
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      color: var(--hint);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .cat-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    /* Карточки товаров */
+    .grid { display: flex; flex-direction: column; gap: 11px; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .card.in-cart {
+      border-color: var(--accent);
+      background: linear-gradient(145deg, #1b172a 0%, #15151c 100%);
+      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.25);
+    }
+    .prod-img {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: var(--card-elevated);
+      border: 1px solid var(--card-border);
+    }
+    .info { flex: 1; min-width: 0; }
+    .tags-row { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+    .tag {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #c4b5fd;
+      background: var(--accent-soft);
+      padding: 3px 7px;
+      border-radius: 6px;
+    }
+    .name { font-weight: 800; font-size: 15px; margin-bottom: 3px; }
+    .flavor { font-size: 13px; color: var(--hint); margin-bottom: 9px; line-height: 1.35; }
+    .price-row { display: flex; align-items: baseline; gap: 9px; }
+    .price { font-weight: 800; font-size: 18px; color: var(--text); }
+    .price.sale {
+      color: #f87171;
+      text-shadow: 0 0 10px rgba(248, 113, 113, 0.22);
+    }
+    .old-price {
+      font-size: 13px;
+      font-weight: 600;
+      color: #71717a;
+      text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+    }
+
+    /* Кнопка добавления (1 шт) */
+    .add-btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .add-btn.added {
+      background: var(--green-soft);
+      border-color: rgba(74, 222, 128, 0.4);
+      color: var(--green);
+      box-shadow: none;
+    }
+
+    /* Вкладка Корзина */
+    .section-title { font-size: 18px; font-weight: 800; margin-bottom: 12px; }
+    .empty-cart {
+      background: var(--card);
+      border: 1px dashed var(--card-border);
+      border-radius: 18px;
+      padding: 34px 20px;
+      text-align: center;
+    }
+    .empty-icon { font-size: 38px; margin-bottom: 10px; }
+    .empty-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .empty-desc { font-size: 13px; color: var(--hint); margin-bottom: 16px; }
+    .go-catalog-btn {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .cart-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+    .cart-item {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 15px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .cart-item-info { flex: 1; }
+    .cart-item-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .cart-item-flavor { font-size: 12px; color: var(--hint); }
+    .cart-item-right { display: flex; align-items: center; gap: 10px; }
+    .cart-item-price { font-size: 14px; font-weight: 800; white-space: nowrap; }
+    .remove-btn {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(248, 113, 113, 0.14);
+      color: var(--danger);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .box-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .pay-label { font-size: 12px; color: var(--hint); margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+    .pay-options { display: flex; flex-direction: column; gap: 8px; }
+    .pay-btn {
+      width: 100%; text-align: left; padding: 11px 12px;
+      border-radius: 12px; border: 1px solid var(--card-border);
+      background: var(--bg); color: var(--text);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .pay-btn.active { border-color: var(--accent); background: var(--accent-soft); }
+    .pay-btn span { font-size: 12px; color: var(--hint); }
+
+    .comment-input {
+      width: 100%; padding: 12px; border-radius: 12px;
+      border: 1px solid var(--card-border);
+      background: var(--bg); color: var(--text);
+      font-size: 14px; outline: none;
+    }
+    .comment-input:focus { border-color: var(--accent); }
+
+    .summary-row {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: var(--hint); margin-bottom: 6px;
+    }
+    .summary-row.discount {
+      color: var(--green);
+      font-weight: 700;
+    }
+    .summary-row.total {
+      font-size: 16px; font-weight: 800; color: var(--text);
+      margin-top: 8px; padding-top: 8px;
+      border-top: 1px solid var(--card-border);
+      margin-bottom: 0;
+    }
+
+    .confirm-btn {
+      width: 100%; padding: 15px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+      color: #fff; font-size: 15px; font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px var(--accent-glow);
+    }
+
+    /* Вкладка Акции */
+    .promo-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .promo-card.featured {
+      background: linear-gradient(145deg, #231938 0%, #15151c 100%);
+      border-color: rgba(139, 92, 246, 0.5);
+    }
+    .promo-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #c4b5fd;
+      background: var(--accent-soft);
+      padding: 4px 9px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+    .promo-badge.fire { color: #fdba74; background: rgba(249, 115, 22, 0.16); }
+    .promo-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+    .promo-desc { font-size: 13px; color: var(--hint); line-height: 1.5; }
+    .promo-desc b { color: var(--text); }
+    .promo-list { margin-top: 10px; list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 13px; }
+
+    /* Вкладка Канал */
+    .channel-box {
+      background: linear-gradient(145deg, #161d2b 0%, #15151c 100%);
+      border: 1px solid rgba(42, 171, 238, 0.35);
+      border-radius: 18px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+    .channel-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .channel-desc { font-size: 13px; color: var(--hint); margin-bottom: 16px; line-height: 1.45; }
+    .tg-btn {
+      width: 100%; padding: 14px; border-radius: 12px; border: none;
+      background: #2aabee; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
+    }
+    .info-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 13px;
+      color: var(--hint);
+      line-height: 1.55;
+      margin-bottom: 12px;
+    }
+    .info-card strong { color: var(--text); display: block; margin-bottom: 6px; font-size: 14px; }
+
+    /* Нижнее меню */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(11, 11, 15, 0.94);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 6px 14px;
+      z-index: 100;
+    }
+    .nav-item {
+      position: relative;
+      background: none;
+      border: none;
+      color: var(--hint);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      flex: 1;
+    }
+    .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .nav-item.active { color: var(--accent); }
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: calc(50% - 20px);
+      background: var(--accent);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      min-width: 18px;
+      height: 18px;
+      border-radius: 10px;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 5px;
+      border: 2px solid var(--bg);
+    }
+    .cart-badge.show { display: flex; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brand-wrap">
+      <div class="brand-dot"></div>
+      <div class="brand">District<span>Puff</span></div>
+    </div>
+    <div class="status-pill">● В наличии</div>
+  </div>
+
+  <!-- ВКЛАДКА 1: КАТАЛОГ -->
+  <div id="tab-catalog" class="tab-content active">
+    <div class="sale-banner">
+      <strong>🔥 Распродажа остатков перед завозом</strong>
+      <span>Самые дешёвые цены • Акции • Скидки • Лучший ассортимент</span>
+    </div>
+    <div class="categories" id="categories"></div>
+    <div class="grid" id="catalog"></div>
+  </div>
+
+  <!-- ВКЛАДКА 2: КОРЗИНА -->
+  <div id="tab-cart" class="tab-content">
+    <div class="section-title">Твоя корзина</div>
+    <div id="cart-empty" class="empty-cart">
+      <div class="empty-icon">🛒</div>
+      <div class="empty-title">Корзина пока пуста</div>
+      <div class="empty-desc">Выбери нужные позиции в каталоге — каждая добавляется по 1 шт.</div>
+      <button class="go-catalog-btn" onclick="goToTab('catalog')">Перейти в каталог</button>
+    </div>
+
+    <div id="cart-filled" style="display: none;">
+      <div class="cart-list" id="cart-list"></div>
+
+      <div class="box-card">
+        <div class="pay-label">Способ оплаты</div>
+        <div class="pay-options">
+          <button class="pay-btn active" onclick="selectPayment('Наличкой', 0, this)">
+            💵 Наличкой <span>без доплат</span>
+          </button>
+          <button class="pay-btn" onclick="selectPayment('На карту (Альфа-банк)', 1, this)">
+            💳 На карту (Альфа-банк) <span>+1 BYN / шт</span>
+          </button>
+          <button class="pay-btn" onclick="selectPayment('В долг (до недели)', 1, this)">
+            🤝 В долг (до недели) <span>+1 BYN / шт</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="box-card">
+        <div class="pay-label">Комментарий к заказу</div>
+        <input type="text" class="comment-input" id="comment" placeholder="Время встречи, модель картриджа, от кого пришёл..." />
+      </div>
+
+      <div class="box-card" id="cart-summary"></div>
+
+      <button class="confirm-btn" id="confirm-btn" onclick="submitOrder()">Оформить заказ</button>
+    </div>
+  </div>
+
+  <!-- ВКЛАДКА 3: АКЦИИ -->
+  <div id="tab-promos" class="tab-content">
+    <div class="promo-card featured">
+      <div class="promo-badge fire">🎉 Розыгрыш на 75 подписчиков</div>
+      <div class="promo-title">Покупай позиции — забирай номерки</div>
+      <div class="promo-desc">
+        Как только добьём <b>75 подписчиков</b> в ТГК, за каждую купленную позицию выдаём номерок (больше позиций = больше шансов). Выберем 3 победителей рандомайзером:
+      </div>
+      <ul class="promo-list">
+        <li>🥇 <b>1 место</b> — любая жижа на выбор + The Chillers / My yummy</li>
+        <li>🥈 <b>2 место</b> — любой картридж + The Chillers / My yummy</li>
+        <li>🥉 <b>3 место</b> — жидкость The Chillers / My yummy</li>
+      </ul>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">🎁 Акция 1</div>
+      <div class="promo-title">Комплект: Жижа + картридж</div>
+      <div class="promo-desc">
+        Берёшь сразу всё вместе — скидка считается автоматически в корзине:<br>
+        • <b>Премиум + картридж</b> = скидка <b>2 BYN</b><br>
+        • <b>Классика / Бюджет + картридж</b> = скидка <b>1 BYN</b>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">🎁 Акция 2</div>
+      <div class="promo-title">Приведи соседа — скидка растёт</div>
+      <div class="promo-desc">
+        Скидываешь другу ссылку на канал → он подписывается, делает первый заказ и говорит, что от тебя:<br><br>
+        • 1-й сосед — скидка <b>-2 BYN</b><br>
+        • 2-й сосед — скидка <b>-5 BYN</b><br>
+        • 3-й сосед — скидка <b>-9 BYN</b><br>
+        <i>(+1 BYN к шагу за каждого нового человека)</i><br><br>
+        📋 <b>Все скидки складываются!</b>
+      </div>
+    </div>
+  </div>
+
+  <!-- ВКЛАДКА 4: КАНАЛ -->
+  <div id="tab-channel" class="tab-content">
+    <div class="channel-box">
+      <div class="channel-title">Канал DistrictPuff</div>
+      <div class="channel-desc">Свежие завозы, розыгрыш на 75 подписчиков и актуальное наличие — всё в нашем Telegram-канале.</div>
+      <button class="tg-btn" onclick="openChannel()">Перейти в Telegram-канал</button>
+    </div>
+
+    <div class="info-card">
+      <strong>💳 Способы оплаты</strong>
+      1. <b>Наличкой</b> — без доплат.<br>
+      2. <b>На карту (Альфа-банк)</b> — +1 BYN к каждой позиции.<br>
+      3. <b>В долг (до недели)</b> — +1 BYN к каждой позиции.
+    </div>
+
+    <div class="info-card">
+      <strong>📥 Как оформить заказ</strong>
+      Выбирай нужные позиции в каталоге, переходи во вкладку <b>«Корзина»</b>, выбирай способ оплаты и жми <b>«Оформить заказ»</b>.
+    </div>
+  </div>
+
+  <!-- Нижнее меню -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-catalog" onclick="goToTab('catalog')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Каталог
+    </button>
+    <button class="nav-item" id="nav-cart" onclick="goToTab('cart')">
+      <span class="cart-badge" id="cart-badge">0</span>
+      <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Корзина
+    </button>
+    <button class="nav-item" id="nav-promos" onclick="goToTab('promos')">
+      <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+      Акции
+    </button>
+    <button class="nav-item" id="nav-channel" onclick="goToTab('channel')">
+      <svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      Канал
+    </button>
+  </nav>
+
+  <script>
+    const tg = window.Telegram ? window.Telegram.WebApp : null;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
+
+    // ================= НАСТРОЙКИ =================
+    const CHANNEL_URL = "https://t.me/c/4418660396/3";
+
+    const CATEGORIES = [
+      { id: "Премиум", label: "💎 Премиум" },
+      { id: "Классика", label: "🧪 Классика" },
+      { id: "Бюджет", label: "💸 Бюджет" },
+      { id: "Картриджи", label: "🔋 Картриджи" },
+      { id: "Девайсы", label: "⚡ Девайсы" },
+      { id: "Услуги", label: "🛠 Услуги" }
+    ];
+
+    const PRODUCTS = [
+      // Премиум
+      { id: 1, category: "Премиум", img: "elfliq.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Виноград яблочный сок", price: 17, oldPrice: 20 },
+      { id: 2, category: "Премиум", img: "elfliq.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Вишня роза мята", price: 17, oldPrice: 20 },
+      { id: 3, category: "Премиум", img: "elfliq.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Яблоко киви клубника", price: 17, oldPrice: 20 },
+      { id: 4, category: "Премиум", img: "elfliq.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Красная слива нектарин", price: 17, oldPrice: 20 },
+
+      // Классика
+      { id: 5, category: "Классика", img: "isterika.jpg", tag: "Классика • 70 mg", name: "ISTERIKA САМОУБИЙЦА", flavor: "Клубника киви мята", price: 15, oldPrice: 17 },
+      { id: 6, category: "Классика", img: "danger.jpg", tag: "Классика • 100 mg", name: "САМОУБИЙЦА V2 Danger", flavor: "Вишневый холс", price: 15, oldPrice: 17 },
+      { id: 7, category: "Классика", img: "podonki.jpg", tag: "Классика • 20 mg", name: "PODONKI MALAYSIAN ARCADE", flavor: "Цитрусовый микс", price: 15, oldPrice: 17 },
+
+      // Бюджет
+      { id: 8, category: "Бюджет", img: "chillers.jpg", tag: "Бюджет • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10 },
+      { id: 9, category: "Бюджет", img: "myyummy.jpg", tag: "Бюджет • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10 },
+
+      // Картриджи
+      { id: 10, category: "Картриджи", img: "cartridge.jpg", tag: "Под заказ", name: "Картридж под заказ", flavor: "Укажи модель и Ом в комментарии (от 13 BYN)", price: 13, oldPrice: 15 },
+
+      // Девайсы и под-системы
+      { id: 11, category: "Девайсы", img: "dabbler.jpg", tag: "Девайсы и под-системы", name: "Aspire Dabbler Nice POD", flavor: "Компактная под-система", price: 10, oldPrice: null },
+
+      // Услуги
+      { id: 12, category: "Услуги", img: "rm.jpg", tag: "Услуга • заправка", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 1, oldPrice: null },
+      { id: 13, category: "Услуги", img: "rm.jpg", tag: "Услуга • заправка", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 1, oldPrice: null },
+      { id: 14, category: "Услуги", img: "cig.jpg", tag: "Услуга", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0.5, oldPrice: null }
+    ];
+
+    // ================= ЛОГИКА =================
+    let currentCategory = "Премиум";
+    let paymentMethod = "Наличкой";
+    let paymentFeePerItem = 0;
+    const cart = new Set(); // Максимум 1 шт каждой позиции
+
+    function formatPrice(val) {
+      return Number.isInteger(val) ? String(val) : val.toFixed(2);
+    }
+
+    function haptic() {
+      try { if (tg) tg.HapticFeedback.impactOccurred("light"); } catch (e) {}
+    }
+
+    function goToTab(tabName) {
+      haptic();
+      document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".nav-item").forEach(el => el.classList.remove("active"));
+      document.getElementById("tab-" + tabName).classList.add("active");
+      document.getElementById("nav-" + tabName).classList.add("active");
+      if (tabName === "cart") renderCart();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openChannel() {
+      haptic();
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(CHANNEL_URL);
+      } else {
+        window.open(CHANNEL_URL, "_blank");
+      }
+    }
+
+    function renderCategories() {
+      const el = document.getElementById("categories");
+      el.innerHTML = "";
+      CATEGORIES.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "cat-btn" + (cat.id === currentCategory ? " active" : "");
+        btn.textContent = cat.label;
+        btn.onclick = () => {
+          haptic();
+          currentCategory = cat.id;
+          renderCategories();
+          renderCatalog();
+        };
+        el.appendChild(btn);
+      });
+    }
+
+    function renderCatalog() {
+      const el = document.getElementById("catalog");
+      el.innerHTML = "";
+      const filtered = PRODUCTS.filter(p => p.category === currentCategory);
+
+      filtered.forEach(p => {
+        const isAdded = cart.has(p.id);
+        const hasSale = p.oldPrice && p.oldPrice > p.price;
+        const card = document.createElement("div");
+        card.className = "card" + (isAdded ? " in-cart" : "");
+        card.innerHTML = `
+          <img class="prod-img" src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
+          <div class="info">
+            <div class="tags-row">
+              <span class="tag">${p.tag}</span>
+            </div>
+            <div class="name">${p.name}</div>
+            <div class="flavor">${p.flavor}</div>
+            <div class="price-row">
+              <span class="price ${hasSale ? "sale" : ""}">${formatPrice(p.price)} BYN</span>
+              ${hasSale ? `<span class="old-price">${formatPrice(p.oldPrice)} BYN</span>` : ""}
+            </div>
+          </div>
+          <button class="add-btn ${isAdded ? "added" : ""}" onclick="toggleItem(${p.id})">
+            ${isAdded ? "✓ В корзине" : "+ Взять"}
+          </button>
+        `;
+        el.appendChild(card);
+      });
+      updateBadge();
+    }
+
+    window.toggleItem = function(id) {
+      haptic();
+      if (cart.has(id)) {
+        cart.delete(id);
+      } else {
+        cart.add(id);
+      }
+      renderCatalog();
+      renderCart();
+    };
+
+    function updateBadge() {
+      const badge = document.getElementById("cart-badge");
+      if (cart.size > 0) {
+        badge.textContent = cart.size;
+        badge.classList.add("show");
+      } else {
+        badge.classList.remove("show");
+      }
+    }
+
+    function getOrderData() {
+      const items = [];
+      let baseTotal = 0;
+      let hasCartridge = false;
+      let hasPremium = false;
+      let hasClassicOrBudget = false;
+
+      cart.forEach(id => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (p) {
+          items.push({ id: p.id, name: p.name, flavor: p.flavor, price: p.price, qty: 1 });
+          baseTotal += p.price;
+          if (p.category === "Картриджи") hasCartridge = true;
+          if (p.category === "Премиум") hasPremium = true;
+          if (p.category === "Классика" || p.category === "Бюджет") hasClassicOrBudget = true;
+        }
+      });
+
+      // Скидка за комплект: жижа + картридж
+      let comboDiscount = 0;
+      let comboLabel = "";
+      if (hasCartridge) {
+        if (hasPremium) {
+          comboDiscount = 2;
+          comboLabel = "Комплект: Премиум + картридж";
+        } else if (hasClassicOrBudget) {
+          comboDiscount = 1;
+          comboLabel = "Комплект: Жижа + картридж";
+        }
+      }
+
+      const fee = items.length * paymentFeePerItem;
+      const total = Math.max(0, +(baseTotal - comboDiscount + fee).toFixed(2));
+      const comment = document.getElementById("comment").value.trim() || "Без комментария";
+      return { items, total, baseTotal: +baseTotal.toFixed(2), comboDiscount, comboLabel, fee, payment: paymentMethod, comment };
+    }
+
+    function selectPayment(method, fee, btn) {
+      haptic();
+      paymentMethod = method;
+      paymentFeePerItem = fee;
+      document.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCart();
+    }
+
+    function renderCart() {
+      const emptyEl = document.getElementById("cart-empty");
+      const filledEl = document.getElementById("cart-filled");
+
+      if (cart.size === 0) {
+        emptyEl.style.display = "block";
+        filledEl.style.display = "none";
+        return;
+      }
+
+      emptyEl.style.display = "none";
+      filledEl.style.display = "block";
+
+      const listEl = document.getElementById("cart-list");
+      listEl.innerHTML = "";
+      cart.forEach(id => {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) return;
+        const row = document.createElement("div");
+        row.className = "cart-item";
+        row.innerHTML = `
+          <div class="cart-item-info">
+            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-flavor">${p.flavor}</div>
+          </div>
+          <div class="cart-item-right">
+            <span class="cart-item-price">${formatPrice(p.price)} BYN</span>
+            <button class="remove-btn" onclick="toggleItem(${p.id})">✕</button>
+          </div>
+        `;
+        listEl.appendChild(row);
+      });
+
+      const { items, baseTotal, comboDiscount, comboLabel, fee, total } = getOrderData();
+      document.getElementById("cart-summary").innerHTML = `
+        <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
+        <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
+        ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 ${comboLabel}</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
+        ${fee > 0 ? `<div class="summary-row"><span>Комиссия (${paymentMethod})</span><span>+${formatPrice(fee)} BYN</span></div>` : ""}
+        <div class="summary-row total"><span>Итого к оплате</span><span>${formatPrice(total)} BYN</span></div>
+      `;
+      document.getElementById("confirm-btn").textContent = `Оформить заказ • ${formatPrice(total)} BYN`;
+    }
+
+    function submitOrder() {
+      haptic();
+      const order = getOrderData();
+      if (order.items.length === 0) return;
+
+      if (tg && tg.initData) {
+        tg.sendData(JSON.stringify(order));
+      } else {
+        alert(`Заказ сформирован на ${formatPrice(order.total)} BYN (${order.payment}).\nВнутри Telegram он сразу улетит в бота!`);
+      }
+    }
+
+    renderCategories();
+    renderCatalog();
+    renderCart();
+  </script>
+</body>
+</html>
