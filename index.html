@@ -254,10 +254,10 @@
       border-radius: 12px; border: 1px solid var(--card-border);
       background: var(--bg); color: var(--text);
       font-size: 13px; font-weight: 600; cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
+      display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .pay-btn.active { border-color: var(--accent); background: var(--accent-soft); }
-    .pay-btn span { font-size: 12px; color: var(--hint); }
+    .pay-btn span { font-size: 12px; color: var(--hint); text-align: right; }
 
     .comment-input {
       width: 100%; padding: 12px; border-radius: 12px;
@@ -430,17 +430,17 @@
       <div class="box-card">
         <div class="pay-label">Способ оплаты</div>
         <div class="pay-options">
-          <button class="pay-btn active" onclick="selectPayment('Наличкой', 0, 0, this)">
+          <button class="pay-btn active" onclick="selectPayment('cash', 'Наличкой', this)">
             💵 Наличкой <span>без доплат</span>
           </button>
-          <button class="pay-btn" onclick="selectPayment('На карту (Альфа-банк)', 1, 0, this)">
-            💳 На карту (Альфа-банк) <span>+1 BYN / шт</span>
+          <button class="pay-btn" onclick="selectPayment('card', 'На карту (Альфа-банк)', this)">
+            💳 На карту (Альфа-банк) <span>+1 BYN ко всему заказу</span>
           </button>
-          <button class="pay-btn" onclick="selectPayment('В долг (до недели)', 1, 0, this)">
-            🤝 В долг (до недели) <span>+1 BYN / шт</span>
+          <button class="pay-btn" onclick="selectPayment('debt', 'В долг (до недели)', this)">
+            🤝 В долг (до недели) <span>+1 BYN за позицию</span>
           </button>
-          <button class="pay-btn" onclick="selectPayment('В долг + на карту (Альфа-банк)', 1, 1, this)">
-            🤝💳 В долг + на карту <span>+1 BYN и +1 BYN / шт</span>
+          <button class="pay-btn" onclick="selectPayment('debt_card', 'В долг + на карту (Альфа-банк)', this)">
+            🤝💳 В долг + на карту <span>+1 BYN за карту и +1 BYN / поз.</span>
           </button>
         </div>
       </div>
@@ -506,9 +506,10 @@
     <div class="info-card">
       <strong>💳 Способы оплаты</strong>
       1. <b>Наличкой</b> — без доплат.<br>
-      2. <b>На карту (Альфа-банк)</b> — +1 BYN к каждой позиции.<br>
+      2. <b>На карту (Альфа-банк)</b> — +1 BYN ко всей стоимости заказа.<br>
       3. <b>В долг (до недели)</b> — +1 BYN к каждой позиции.<br>
-      4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN за карту и +1 BYN к каждой позиции.
+      4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN за карту и +1 BYN к каждой позиции.<br><br>
+      <i>Комиссии не распространяются на под-системы и услуги (залить жижу, взять сигарету).</i>
     </div>
 
     <div class="info-card">
@@ -547,6 +548,7 @@
 
     // ================= НАСТРОЙКИ =================
     const CHANNEL_URL = "https://t.me/c/4418660396/3";
+    const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
 
     const CATEGORIES = [
       { id: "Премиум", label: "💎 Премиум" },
@@ -587,9 +589,8 @@
 
     // ================= ЛОГИКА =================
     let currentCategory = "Премиум";
+    let paymentCode = "cash";
     let paymentMethod = "Наличкой";
-    let paymentFeePerItem = 0;
-    let paymentFixedFee = 0;
     const cart = new Set(); // Максимум 1 шт каждой позиции
 
     function formatPrice(val) {
@@ -692,6 +693,7 @@
     function getOrderData() {
       const items = [];
       let baseTotal = 0;
+      let eligibleCount = 0; // Позиции, на которые распространяется комиссия (без девайсов и услуг)
       let hasCartridge = false;
       let hasPremium = false;
       let hasClassicOrBudget = false;
@@ -701,6 +703,7 @@
         if (p) {
           items.push({ id: p.id, name: p.name, flavor: p.flavor, price: p.price, qty: 1 });
           baseTotal += p.price;
+          if (!NO_FEE_CATEGORIES.has(p.category)) eligibleCount += 1;
           if (p.category === "Картриджи") hasCartridge = true;
           if (p.category === "Премиум") hasPremium = true;
           if (p.category === "Классика" || p.category === "Бюджет") hasClassicOrBudget = true;
@@ -720,17 +723,39 @@
         }
       }
 
-      const fee = paymentFixedFee + items.length * paymentFeePerItem;
+      // Расчёт комиссии:
+      // - cash: 0
+      // - card: +1 BYN ко всему заказу (если есть хотя бы 1 позиция с комиссией)
+      // - debt: +1 BYN за каждую позицию с комиссией
+      // - debt_card: +1 BYN за карту + 1 BYN за каждую позицию с комиссией
+      let fee = 0;
+      if (paymentCode === "card") {
+        fee = eligibleCount > 0 ? 1 : 0;
+      } else if (paymentCode === "debt") {
+        fee = eligibleCount;
+      } else if (paymentCode === "debt_card") {
+        fee = (eligibleCount > 0 ? 1 : 0) + eligibleCount;
+      }
+
       const total = Math.max(0, +(baseTotal - comboDiscount + fee).toFixed(2));
       const comment = document.getElementById("comment").value.trim() || "Без комментария";
-      return { items, total, baseTotal: +baseTotal.toFixed(2), comboDiscount, comboLabel, fee, payment: paymentMethod, comment };
+      return {
+        items,
+        total,
+        baseTotal: +baseTotal.toFixed(2),
+        comboDiscount,
+        comboLabel,
+        fee,
+        eligibleCount,
+        payment: paymentMethod,
+        comment
+      };
     }
 
-    function selectPayment(method, feePerItem, fixedFee, btn) {
+    function selectPayment(code, label, btn) {
       haptic();
-      paymentMethod = method;
-      paymentFeePerItem = feePerItem;
-      paymentFixedFee = fixedFee;
+      paymentCode = code;
+      paymentMethod = label;
       document.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       renderCart();
