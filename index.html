@@ -88,24 +88,18 @@
     .mini-banner {
       border-radius: 13px;
       padding: 9px 12px;
-      line-height: 1.3;
+      line-height: 1.35;
     }
     .mini-banner.guide {
       background: rgba(255, 255, 255, 0.035);
       border: 1px solid var(--card-border);
     }
-    .mini-banner strong {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 2px;
-    }
     .mini-banner.guide span {
       display: block;
-      font-size: 11.5px;
+      font-size: 12px;
       color: var(--hint);
       font-weight: 500;
+      text-align: center;
     }
 
     /* Плашка лимита для бесплатных услуг */
@@ -297,7 +291,7 @@
     /* Сворачиваемая инструкция в корзине */
     .cart-guide {
       background: rgba(139, 92, 246, 0.08);
-      border: 1px solid rgba(139, 92, 246, 0.28);
+      border: 1px solid rgba(139, 92, 246, 0.32);
       border-radius: 13px;
       padding: 10px 12px;
       margin-bottom: 12px;
@@ -319,13 +313,36 @@
       transition: transform 0.2s;
     }
     .cart-guide[open] summary::after { transform: rotate(180deg); }
+    .guide-title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .important-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 19px;
+      height: 19px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      box-shadow: 0 0 10px var(--accent-glow);
+      flex-shrink: 0;
+    }
+    .important-text {
+      color: #e9d5ff;
+      font-weight: 800;
+    }
     .cart-guide-body {
       margin-top: 8px;
       padding-top: 8px;
       border-top: 1px solid rgba(139, 92, 246, 0.18);
       font-size: 12px;
       color: #d4d4d8;
-      line-height: 1.5;
+      line-height: 1.55;
     }
     .cart-guide-body b { color: var(--text); }
 
@@ -394,14 +411,7 @@
       padding: 14px;
       margin-bottom: 12px;
     }
-    .pay-label { font-size: 12px; color: var(--hint); margin-bottom: 6px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
-    .comment-hint {
-      font-size: 11.5px;
-      color: #a1a1aa;
-      line-height: 1.4;
-      margin-bottom: 9px;
-    }
-    .comment-hint b { color: #e4e4e7; }
+    .pay-label { font-size: 12px; color: var(--hint); margin-bottom: 8px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
     .pay-options { display: flex; flex-direction: column; gap: 8px; }
     .pay-btn {
       width: 100%; text-align: left; padding: 11px 12px;
@@ -420,6 +430,18 @@
       font-size: 14px; outline: none;
     }
     .comment-input:focus { border-color: var(--accent); }
+    .comment-input.promo-valid { border-color: var(--green); }
+
+    .promo-status {
+      margin-top: 7px;
+      font-size: 11.5px;
+      color: var(--hint);
+      line-height: 1.35;
+    }
+    .promo-status.applied {
+      color: var(--green);
+      font-weight: 600;
+    }
 
     .summary-row {
       display: flex; justify-content: space-between;
@@ -582,7 +604,6 @@
   <div id="tab-catalog" class="tab-content active">
     <div class="info-banners">
       <div class="mini-banner guide">
-        <strong>📋 Как оформить заказ</strong>
         <span>Выбирай нужные позиции в каталоге, переходи во вкладку «Корзина» и смотри инструкцию</span>
       </div>
     </div>
@@ -662,12 +683,18 @@
     </div>
 
     <details class="cart-guide">
-      <summary>📋 Как оформить заказ</summary>
+      <summary>
+        <span class="guide-title-wrap">
+          <span class="important-mark">!</span>
+          <span>Как оформить заказ <span class="important-text">(Важно)</span></span>
+        </span>
+      </summary>
       <div class="cart-guide-body">
         1. Проверь выбранные позиции в корзине.<br>
         2. Выбери удобный способ оплаты.<br>
-        3. Напиши свой <b>@username</b> в комментарии (и от кого пришёл, если по акции).<br>
-        4. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
+        3. Введи промокод в специальное поле, если он у тебя есть.<br>
+        4. Напиши свой <b>@username</b> в комментарии (и от кого пришёл, если по акции <b>«Приведи соседа»</b>).<br>
+        5. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
       </div>
     </details>
 
@@ -700,8 +727,13 @@
       </div>
 
       <div class="box-card">
+        <div class="pay-label">Промокод</div>
+        <input type="text" class="comment-input" id="promo-input" placeholder="Введи промокод" oninput="onPromoInput(this.value)" />
+        <div class="promo-status" id="promo-status">Менеджер проверит, доступен ли вам промокод</div>
+      </div>
+
+      <div class="box-card">
         <div class="pay-label">Комментарий к заказу</div>
-        <div class="comment-hint">Напиши свой <b>@username</b> в Telegram. Если скидка по акции «Приведи соседа» — укажи от кого пришёл, чтобы менеджер подтвердил.</div>
         <input type="text" class="comment-input" id="comment" placeholder="@username" />
       </div>
 
@@ -742,6 +774,8 @@
     // ================= НАСТРОЙКИ =================
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
     const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
+    const ACTIVE_PROMO = "круглобуф";
+    const PROMO_DISCOUNT_AMOUNT = 1;
 
     const CATEGORIES = [
       { id: "Премиум", label: "💎 Премиум" },
@@ -771,15 +805,15 @@
       // Картриджи
       { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.6Ω", flavor: "", price: 13, oldPrice: 15 },
       { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.4Ω", flavor: "", price: 13, oldPrice: 15 },
-      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 13, oldPrice: 15 },
+      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 13, oldPrice: 15 },
 
       // Девайсы и под-системы
       { id: 11, category: "Девайсы", img: "https://i.postimg.cc/4y2Tyzhh/IMG-9831.jpg", tag: "POD-системы", name: "Aspire Dabbler Nice POD", flavor: "", price: 10, oldPrice: 15 },
 
-      // Услуги (бесплатно, 1 в одни руки)
-      { id: 12, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуга • заправка", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 0, oldPrice: null },
-      { id: 13, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуга • заправка", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 0, oldPrice: null },
-      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуга", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null }
+      // Услуги (бесплатно, 1 раз на человека)
+      { id: 12, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 0, oldPrice: null },
+      { id: 13, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 0, oldPrice: null },
+      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null }
     ];
 
     // ================= ЛОГИКА =================
@@ -788,6 +822,7 @@
     let isCartOpen = false;
     let paymentCode = "cash";
     let paymentMethod = "Наличкой";
+    let promoCode = "";
     const cart = new Set(); // Максимум 1 шт каждой позиции
 
     function formatPrice(val) {
@@ -796,6 +831,24 @@
 
     function haptic() {
       try { if (tg) tg.HapticFeedback.impactOccurred("light"); } catch (e) {}
+    }
+
+    function onPromoInput(val) {
+      promoCode = val.trim();
+      const isValid = promoCode.toLowerCase() === ACTIVE_PROMO;
+      const inputEl = document.getElementById("promo-input");
+      const statusEl = document.getElementById("promo-status");
+
+      if (isValid) {
+        inputEl.classList.add("promo-valid");
+        statusEl.classList.add("applied");
+        statusEl.textContent = "✓ Промокод применён (−1 BYN). Менеджер проверит, доступен ли он вам";
+      } else {
+        inputEl.classList.remove("promo-valid");
+        statusEl.classList.remove("applied");
+        statusEl.textContent = "Менеджер проверит, доступен ли вам промокод";
+      }
+      renderCartSummary();
     }
 
     function openCart() {
@@ -868,7 +921,7 @@
       if (currentCategory === "Услуги") {
         const note = document.createElement("div");
         note.className = "service-limit-note";
-        note.innerHTML = "🎁 <b>Бесплатно</b> • можно выбрать 1 услугу в одни руки";
+        note.innerHTML = "🎁 <b>Бесплатно</b> • 1 раз на человека";
         el.appendChild(note);
       }
 
@@ -911,7 +964,7 @@
       if (cart.has(id)) {
         cart.delete(id);
       } else {
-        // Лимит: максимум 1 бесплатная услуга в одни руки
+        // Лимит: максимум 1 бесплатная услуга
         if (product && product.category === "Услуги") {
           PRODUCTS.forEach(p => {
             if (p.category === "Услуги") cart.delete(p.id);
@@ -968,6 +1021,9 @@
         }
       }
 
+      const promoApplied = promoCode.toLowerCase() === ACTIVE_PROMO && baseTotal > 0;
+      const promoDiscount = promoApplied ? PROMO_DISCOUNT_AMOUNT : 0;
+
       let fee = 0;
       if (paymentCode === "card") {
         fee = eligibleCount > 0 ? 1 : 0;
@@ -977,7 +1033,7 @@
         fee = (eligibleCount > 0 ? 1 : 0) + eligibleCount;
       }
 
-      const total = Math.max(0, +(baseTotal - comboDiscount + fee).toFixed(2));
+      const total = Math.max(0, +(baseTotal - comboDiscount - promoDiscount + fee).toFixed(2));
       const comment = document.getElementById("comment").value.trim() || "Без комментария";
       return {
         items,
@@ -985,6 +1041,8 @@
         baseTotal: +baseTotal.toFixed(2),
         comboDiscount,
         comboLabel,
+        promoCode: promoApplied ? ACTIVE_PROMO : "",
+        promoDiscount,
         fee,
         eligibleCount,
         payment: paymentMethod,
@@ -998,7 +1056,21 @@
       paymentMethod = label;
       document.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      renderCart();
+      renderCartSummary();
+    }
+
+    function renderCartSummary() {
+      if (cart.size === 0) return;
+      const { items, baseTotal, comboDiscount, comboLabel, promoDiscount, fee, total } = getOrderData();
+      document.getElementById("cart-summary").innerHTML = `
+        <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
+        <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
+        ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 ${comboLabel}</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
+        ${promoDiscount > 0 ? `<div class="summary-row discount"><span>🏷️ Промокод (${ACTIVE_PROMO})</span><span>−${formatPrice(promoDiscount)} BYN</span></div>` : ""}
+        ${fee > 0 ? `<div class="summary-row"><span>Комиссия (${paymentMethod})</span><span>+${formatPrice(fee)} BYN</span></div>` : ""}
+        <div class="summary-row total"><span>Итого к оплате</span><span>${formatPrice(total)} BYN</span></div>
+      `;
+      document.getElementById("confirm-btn").textContent = `Оформить заказ • ${formatPrice(total)} BYN`;
     }
 
     function renderCart() {
@@ -1036,15 +1108,7 @@
         listEl.appendChild(row);
       });
 
-      const { items, baseTotal, comboDiscount, comboLabel, fee, total } = getOrderData();
-      document.getElementById("cart-summary").innerHTML = `
-        <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
-        <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
-        ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 ${comboLabel}</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
-        ${fee > 0 ? `<div class="summary-row"><span>Комиссия (${paymentMethod})</span><span>+${formatPrice(fee)} BYN</span></div>` : ""}
-        <div class="summary-row total"><span>Итого к оплате</span><span>${formatPrice(total)} BYN</span></div>
-      `;
-      document.getElementById("confirm-btn").textContent = `Оформить заказ • ${formatPrice(total)} BYN`;
+      renderCartSummary();
     }
 
     function submitOrder() {
