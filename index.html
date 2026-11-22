@@ -583,7 +583,14 @@
       line-height: 1.55;
       margin-bottom: 12px;
     }
-    .info-card strong { color: var(--text); display: block; margin-bottom: 6px; font-size: 14px; }
+    .info-card strong { color: var(--text); display: block; margin-bottom: 8px; font-size: 14px; }
+    .benefits-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .benefits-list b { color: var(--text); }
 
     /* Нижнее меню */
     .bottom-nav {
@@ -720,6 +727,16 @@
       <div class="channel-title">Канал DistrictPuff</div>
       <div class="channel-desc">Свежие завозы, розыгрыш на 70 подписчиков и актуальное наличие — всё в нашем Telegram-канале.</div>
       <button class="tg-btn" onclick="openChannel()">Перейти в Telegram-канал</button>
+    </div>
+
+    <div class="info-card">
+      <strong>✨ Почему DistrictPuff</strong>
+      <ul class="benefits-list">
+        <li>🚚 <b>Бесплатная доставка</b> — договоримся о времени и привезём без доплат.</li>
+        <li>🎁 <b>Бесплатные услуги</b> — залить жидкость или взять сигаретку за 0 BYN.</li>
+        <li>🔥 <b>Скидки и широкий выбор</b> — регулярные акции, промокоды и топовые вкусы под любой запрос.</li>
+        <li>⚡ <b>Удобный заказ в пару кликов</b> — всё оформляется прямо в мини-приложении без лишних переписок.</li>
+      </ul>
     </div>
 
     <div class="info-card">
