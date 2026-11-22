@@ -438,6 +438,13 @@
       letter-spacing: 0.3px;
     }
 
+    .comment-helper {
+      margin-top: 7px;
+      font-size: 11.5px;
+      color: rgba(255, 255, 255, 0.4);
+      padding-left: 2px;
+    }
+
     /* Компактный промокод внутри плашки расчёта */
     .summary-promo {
       padding-bottom: 10px;
@@ -532,8 +539,9 @@
       margin-bottom: 12px;
     }
     .promo-card.featured {
-      background: linear-gradient(145deg, #231938 0%, #15151c 100%);
-      border-color: rgba(139, 92, 246, 0.5);
+      background: linear-gradient(145deg, #2e1d4a 0%, #1b1429 55%, #15151c 100%);
+      border: 1.5px solid rgba(251, 146, 60, 0.55);
+      box-shadow: 0 8px 26px rgba(139, 92, 246, 0.24), 0 0 18px rgba(251, 146, 60, 0.14);
     }
     .promo-badge {
       display: inline-block;
@@ -546,13 +554,88 @@
       border-radius: 8px;
       margin-bottom: 8px;
     }
-    .promo-badge.fire { color: #fdba74; background: rgba(249, 115, 22, 0.16); }
-    .promo-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
-    .promo-slogan { font-size: 13px; font-weight: 700; color: #e9d5ff; margin-bottom: 8px; }
-    .promo-desc { font-size: 13px; color: var(--hint); line-height: 1.5; }
+    .promo-badge.fire {
+      color: #fed7aa;
+      background: rgba(249, 115, 22, 0.22);
+      border: 1px solid rgba(251, 146, 60, 0.35);
+    }
+    .promo-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
+    .promo-slogan { font-size: 14px; font-weight: 800; color: #fde68a; margin-bottom: 8px; }
+    .promo-desc { font-size: 13px; color: #d4d4d8; line-height: 1.5; }
     .promo-desc b { color: var(--text); }
-    .promo-list { margin-top: 10px; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; }
-    .promo-list li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .promo-list {
+      margin-top: 12px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #e4e4e7;
+    }
+    .promo-list li {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 11px;
+      padding: 8px 10px;
+    }
+
+    /* Раскрывающиеся акции и инфо-плашки */
+    .accordion-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 14px 15px;
+      margin-bottom: 12px;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .accordion-card[open] {
+      border-color: rgba(139, 92, 246, 0.5);
+      background: linear-gradient(145deg, #1b172a 0%, #15151c 100%);
+    }
+    .accordion-card summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .accordion-card summary::-webkit-details-marker { display: none; }
+    .acc-left { flex: 1; min-width: 0; }
+    .acc-sub {
+      font-size: 12px;
+      color: var(--hint);
+      margin-top: 2px;
+    }
+    .acc-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #c4b5fd;
+      background: var(--accent-soft);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      padding: 5px 9px;
+      border-radius: 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .acc-arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+    }
+    .accordion-card[open] .acc-arrow { transform: rotate(180deg); }
+    .accordion-body {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      color: #d4d4d8;
+      line-height: 1.55;
+    }
+    .accordion-body b { color: var(--text); }
 
     /* Вкладка Инфо */
     .channel-box {
@@ -682,43 +765,64 @@
       <div class="promo-badge fire">🎉 Розыгрыш на 70 подписчиков</div>
       <div class="promo-slogan">Покупай — Выигрывай</div>
       <div class="promo-desc">
-        Как только добьём <b>70 подписчиков</b> в ТГК, за каждую купленную позицию выдаём номерок. Выберем 3 победителей:
+        Как только добьём <b>70 подписчиков</b> в Telegram-канале, за каждую купленную позицию выдаём номерок участника. Выберем <b>3 победителей</b>:
       </div>
       <ul class="promo-list">
-        <li>🥇 <b>1 место</b> — жижа на выбор + The Chillers / My yummy</li>
-        <li>🥈 <b>2 место</b> — картридж + The Chillers / My yummy</li>
-        <li>🥉 <b>3 место</b> — жидкость The Chillers / My yummy</li>
+        <li>🥇 <b>1 место</b> — любая жидкость на выбор + жидкость The Chillers или My yummy</li>
+        <li>🥈 <b>2 место</b> — картридж на выбор + жидкость The Chillers или My yummy</li>
+        <li>🥉 <b>3 место</b> — жидкость The Chillers или My yummy на выбор</li>
       </ul>
     </div>
 
-    <div class="promo-card">
-      <div class="promo-badge">🎁 Акция 1</div>
-      <div class="promo-title">Комплект: Жижа + картридж</div>
-      <div class="promo-desc">
-        Берёшь сразу всё вместе — скидка считается автоматически в корзине:<br>
-        • <b>Премиум + картридж</b> = скидка <b>2 BYN</b><br>
-        • <b>Классика / Бюджет + картридж</b> = скидка <b>1 BYN</b>
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-badge" style="margin-bottom: 5px;">🎁 Акция 1</div>
+          <div class="promo-title">Комплект: Жижа + картридж</div>
+          <div class="acc-sub">Автоматическая скидка до −2 BYN</div>
+        </div>
+        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+      </summary>
+      <div class="accordion-body">
+        Добавляй в корзину сразу жидкость и картридж — скидка применится автоматически при расчёте:<br><br>
+        • <b>Премиум жидкость + картридж</b> — скидка <b>−2 BYN</b><br>
+        • <b>Классика или Бюджет + картридж</b> — скидка <b>−1 BYN</b><br><br>
+        Никаких промокодов вводить не нужно — сумма пересчитается сама.
       </div>
-    </div>
+    </details>
 
-    <div class="promo-card">
-      <div class="promo-badge">🎁 Акция 2</div>
-      <div class="promo-title">Приведи соседа</div>
-      <div class="promo-desc">
-        Друг подписывается на канал, делает первый заказ и указывает тебя в комментарии:<br>
-        • <b>−2 BYN</b> за каждого соседа<br>
-        • Действует <b>только на жидкости</b><br>
-        • Цена жидкости не может стать ниже <b>2 BYN</b>
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-badge" style="margin-bottom: 5px;">👥 Акция 2</div>
+          <div class="promo-title">Приведи соседа</div>
+          <div class="acc-sub">Скидка −2 BYN за каждого друга</div>
+        </div>
+        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+      </summary>
+      <div class="accordion-body">
+        Зови друзей и соседей в DistrictPuff и экономь на следующих заказах:<br><br>
+        1. Друг подписывается на наш Telegram-канал.<br>
+        2. Делает свой первый заказ и указывает тебя в комментарии.<br>
+        3. Ты получаешь <b>−2 BYN</b> за каждого приглашённого.<br><br>
+        <i>Скидка действует только на жидкости; итоговая цена жидкости не может быть ниже 2 BYN.</i>
       </div>
-    </div>
+    </details>
 
-    <div class="promo-card">
-      <div class="promo-badge">🎁 Акция 3</div>
-      <div class="promo-title">Скидка по промокоду</div>
-      <div class="promo-desc">
-        Вводи промокод в корзине и жми «Применить» — получи скидку <b>−1 BYN</b> на заказ.
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-badge" style="margin-bottom: 5px;">🏷️ Акция 3</div>
+          <div class="promo-title">Скидка по промокоду</div>
+          <div class="acc-sub">Минус 1 BYN на заказ в корзине</div>
+        </div>
+        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+      </summary>
+      <div class="accordion-body">
+        Есть промокод из канала или от менеджера? Введи его в поле в блоке расчёта в корзине и нажми <b>«Применить»</b> — скидка <b>−1 BYN</b> сразу вычтется из итога.<br><br>
+        <i>Менеджер проверяет право на промокод при подтверждении заказа.</i>
       </div>
-    </div>
+    </details>
   </div>
 
   <!-- ВКЛАДКА 4: ИНФО -->
@@ -739,24 +843,40 @@
       </ul>
     </div>
 
-    <div class="info-card">
-      <strong>💳 Способы оплаты</strong>
-      1. <b>Наличкой</b> — без доплат.<br>
-      2. <b>На карту (Альфа-банк)</b> — +1 BYN к заказу.<br>
-      3. <b>В долг (до недели)</b> — +1 BYN за позиц.<br>
-      4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN к заказу + 1 BYN за позиц.<br><br>
-      <i>Комиссии не распространяются на под-системы и услуги.</i>
-    </div>
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">💳 Способы оплаты</div>
+          <div class="acc-sub">Наличка, карта Альфа-банк, в долг</div>
+        </div>
+        <span class="acc-toggle">Открыть <span class="acc-arrow">▾</span></span>
+      </summary>
+      <div class="accordion-body">
+        1. <b>Наличкой</b> — без доплат.<br>
+        2. <b>На карту (Альфа-банк)</b> — +1 BYN к заказу.<br>
+        3. <b>В долг (до недели)</b> — +1 BYN за позиц.<br>
+        4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN за позиц.<br><br>
+        <i>Комиссии не распространяются на под-системы и услуги.</i>
+      </div>
+    </details>
 
-    <div class="info-card">
-      <strong>📥 Как оформить заказ</strong>
-      1. Выбери товары в каталоге и нажми <b>«+ Купить»</b>.<br>
-      2. Перейди во вкладку <b>«Корзина»</b> внизу экрана и проверь выбранные позиции.<br>
-      3. Выбери <b>способ получения</b> (бесплатная доставка или самовывоз) и <b>способ оплаты</b>.<br>
-      4. Напиши свой <b>@username</b> в комментарии.<br>
-      5. Если есть промокод — введи его в блоке расчёта и нажми «Применить» <i>(менеджер проверит право на промокод; в случае чего — промокод аннулируется)</i>.<br>
-      6. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
-    </div>
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">📥 Как оформить заказ</div>
+          <div class="acc-sub">Пошаговая инструкция</div>
+        </div>
+        <span class="acc-toggle">Открыть <span class="acc-arrow">▾</span></span>
+      </summary>
+      <div class="accordion-body">
+        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b>.<br>
+        2. Перейди во вкладку <b>«Корзина»</b> внизу экрана и проверь выбранные позиции.<br>
+        3. Выбери <b>способ получения</b> (бесплатная доставка или самовывоз) и <b>способ оплаты</b>.<br>
+        4. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
+        5. Если есть промокод — введи его в блоке расчёта и нажми «Применить» <i>(менеджер проверит право на промокод; в случае чего — промокод аннулируется)</i>.<br>
+        6. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
+      </div>
+    </details>
   </div>
 
   <!-- ВЫЕЗЖАЮЩАЯ КОРЗИНА -->
@@ -777,7 +897,7 @@
       <div class="cart-guide-body">
         1. Проверь выбранные позиции в корзине.<br>
         2. Выбери <b>способ получения</b> (доставка или самовывоз) и <b>способ оплаты</b>.<br>
-        3. Напиши свой <b>@username</b> в комментарии.<br>
+        3. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
         4. Если есть промокод — введи его в блоке расчёта и нажми «Применить» <i>(менеджер проверит право на промокод; в случае чего — промокод аннулируется)</i>.<br>
         5. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
       </div>
@@ -827,14 +947,15 @@
             🤝 В долг (до недели) <span>+1 BYN за позиц.</span>
           </button>
           <button class="pay-btn" onclick="selectPayment('debt_card', 'В долг + на карту (Альфа-банк)', this)">
-            🤝💳 В долг + на карту <span>+1 BYN к заказу + 1 BYN за позиц.</span>
+            🤝💳 В долг + на карту <span>+1 BYN за позиц.</span>
           </button>
         </div>
       </div>
 
       <div class="box-card">
         <div class="pay-label">Комментарий к заказу</div>
-        <input type="text" class="comment-input" id="comment" placeholder="@username" />
+        <input type="text" class="comment-input" id="comment" placeholder="Куда доставить и во сколько?" />
+        <div class="comment-helper">Детали уточним с менеджером</div>
       </div>
 
       <!-- Плашка расчёта со встроенным компактным промокодом -->
@@ -883,6 +1004,10 @@
     }
 
     // ================= НАСТРОЙКИ =================
+    // Вставь сюда URL веб-приложения из Google Apps Script (заканчивается на /exec)
+    const SHEET_API_URL = "";
+
+    // Запасной вариант (работает, пока SHEET_API_URL пустой)
     const BOT_TOKEN = "9051670683:AAEgc3aap1jii7BrlYyXOa5ZRePFfhszMUw";
     const ORDERS_CHANNEL_ID = "-1004420885371";
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
@@ -922,9 +1047,9 @@
       { id: 9, category: "Бюджет", img: "https://i.postimg.cc/WbLvYhfN/IMG-9752.jpg", tag: "Бюджет • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10, stock: 1 },
 
       // Картриджи (stock: null — не скрываются)
-      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.6Ω", flavor: "", price: 13, oldPrice: 15, stock: null },
-      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.4Ω", flavor: "", price: 13, oldPrice: 15, stock: null },
-      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 13, oldPrice: 15, stock: null },
+      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.6Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
+      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.4Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
+      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
 
       // Девайсы и под-системы (stock: 1)
       { id: 11, category: "Девайсы", img: "https://i.postimg.cc/4y2Tyzhh/IMG-9831.jpg", tag: "POD-системы", name: "Aspire Dabbler Nice POD", flavor: "", price: 10, oldPrice: 15, stock: 1 },
@@ -935,14 +1060,20 @@
       { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null, stock: null }
     ];
 
+    function applyStocksMap(stocksMap) {
+      if (!stocksMap) return;
+      PRODUCTS.forEach(p => {
+        if (p.stock !== null && typeof stocksMap[String(p.id)] === "number") {
+          p.stock = stocksMap[String(p.id)];
+          if (p.stock <= 0) cart.delete(p.id);
+        }
+      });
+    }
+
     function loadSavedStocks() {
       try {
         const saved = JSON.parse(localStorage.getItem(STOCK_STORAGE_KEY) || "{}");
-        PRODUCTS.forEach(p => {
-          if (p.stock !== null && typeof saved[p.id] === "number") {
-            p.stock = saved[p.id];
-          }
-        });
+        applyStocksMap(saved);
       } catch (e) {}
     }
 
@@ -950,9 +1081,23 @@
       try {
         const map = {};
         PRODUCTS.forEach(p => {
-          if (p.stock !== null) map[p.id] = p.stock;
+          if (p.stock !== null) map[String(p.id)] = p.stock;
         });
         localStorage.setItem(STOCK_STORAGE_KEY, JSON.stringify(map));
+      } catch (e) {}
+    }
+
+    async function syncStocksFromSheet() {
+      if (!SHEET_API_URL) return;
+      try {
+        const res = await fetch(SHEET_API_URL);
+        const data = await res.json();
+        if (data && data.ok && data.stocks) {
+          applyStocksMap(data.stocks);
+          saveStocks();
+          renderCatalog();
+          renderCart();
+        }
       } catch (e) {}
     }
 
@@ -1028,6 +1173,13 @@
       deliveryMethod = label;
       document.querySelectorAll(".delivery-btn").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
+
+      const commentInput = document.getElementById("comment");
+      if (commentInput) {
+        commentInput.placeholder = code === "delivery"
+          ? "Куда доставить и во сколько?"
+          : "Когда удобно забрать заказ?";
+      }
     }
 
     function openCart() {
@@ -1226,10 +1378,8 @@
       let fee = 0;
       if (paymentCode === "card") {
         fee = eligibleCount > 0 ? 1 : 0;
-      } else if (paymentCode === "debt") {
+      } else if (paymentCode === "debt" || paymentCode === "debt_card") {
         fee = eligibleCount;
-      } else if (paymentCode === "debt_card") {
-        fee = (eligibleCount > 0 ? 1 : 0) + eligibleCount;
       }
 
       const total = Math.max(0, +(baseTotal - comboDiscount - neighborDiscount - promoDiscount + fee).toFixed(2));
@@ -1359,26 +1509,40 @@
       ].filter(line => line !== null).join("\n");
 
       try {
-        const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: ORDERS_CHANNEL_ID,
-            text: message,
-            parse_mode: "HTML"
-          })
-        });
+        if (SHEET_API_URL) {
+          const res = await fetch(SHEET_API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({
+              client: `${tgName} (${tgUsername})`,
+              order,
+              message
+            })
+          });
+          const data = await res.json();
+          if (!data || !data.ok) throw new Error("Sheet API error");
+          if (data.stocks) applyStocksMap(data.stocks);
+        } else {
+          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              chat_id: ORDERS_CHANNEL_ID,
+              text: message,
+              parse_mode: "HTML"
+            })
+          });
+          if (!res.ok) throw new Error("Telegram API error");
 
-        if (!res.ok) throw new Error("Telegram API error");
+          order.items.forEach(item => {
+            const p = PRODUCTS.find(x => x.id === item.id);
+            if (p && p.stock !== null) {
+              p.stock = Math.max(0, p.stock - item.qty);
+            }
+          });
+        }
 
-        order.items.forEach(item => {
-          const p = PRODUCTS.find(x => x.id === item.id);
-          if (p && p.stock !== null) {
-            p.stock = Math.max(0, p.stock - item.qty);
-          }
-        });
         saveStocks();
-
         cart.clear();
         appliedPromo = "";
         document.getElementById("promo-input").value = "";
@@ -1395,9 +1559,9 @@
         }
       } catch (err) {
         if (tg && tg.showAlert) {
-          tg.showAlert("Ошибка отправки заказа. Проверь, добавлен ли бот админом в канал.");
+          tg.showAlert("Ошибка отправки заказа. Попробуй ещё раз.");
         } else {
-          alert("Ошибка отправки заказа. Проверь, добавлен ли бот админом в канал.");
+          alert("Ошибка отправки заказа. Попробуй ещё раз.");
         }
       } finally {
         btn.disabled = false;
@@ -1408,6 +1572,7 @@
     renderCategories();
     renderCatalog();
     renderCart();
+    syncStocksFromSheet();
   </script>
 </body>
 </html>
