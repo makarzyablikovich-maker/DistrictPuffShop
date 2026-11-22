@@ -41,15 +41,17 @@
       overflow-x: hidden;
     }
 
-    /* Компактная шапка */
+    /* Компактная шапка с затемнённым фоном */
     .header {
       display: flex;
       flex-direction: column;
       align-items: center;
       margin: -16px -16px 12px;
-      padding: 12px 16px 12px;
-      background: radial-gradient(circle at top, rgba(139, 92, 246, 0.26) 0%, rgba(11, 11, 15, 0) 80%);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 16px 16px 14px;
+      background:
+        linear-gradient(180deg, rgba(11, 11, 15, 0.62) 0%, rgba(11, 11, 15, 0.84) 100%),
+        url("https://i.postimg.cc/fbM5qkLf/IMG-9859.jpg") center / cover no-repeat;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .brand-wrap {
       display: flex;
@@ -68,38 +70,15 @@
       font-size: 22px;
       font-weight: 800;
       letter-spacing: -0.5px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.75);
     }
     .brand span { color: var(--accent); }
     .brand-tagline {
       font-size: 11.5px;
       font-weight: 500;
-      color: #c4b5fd;
-      opacity: 0.85;
+      color: #d8ccf8;
       letter-spacing: 0.2px;
-    }
-
-    /* Компактная плашка инструкции в каталоге */
-    .info-banners {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-    .mini-banner {
-      border-radius: 13px;
-      padding: 9px 12px;
-      line-height: 1.35;
-    }
-    .mini-banner.guide {
-      background: rgba(255, 255, 255, 0.035);
-      border: 1px solid var(--card-border);
-    }
-    .mini-banner.guide span {
-      display: block;
-      font-size: 12px;
-      color: var(--hint);
-      font-weight: 500;
-      text-align: center;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     }
 
     /* Плашка лимита для бесплатных услуг */
@@ -212,7 +191,14 @@
       text-decoration-thickness: 1.5px;
     }
 
-    /* Кнопка добавления */
+    /* Кнопка добавления и пометка наличия */
+    .card-action {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+    }
     .add-btn {
       padding: 10px 14px;
       border-radius: 12px;
@@ -231,6 +217,13 @@
       border-color: rgba(74, 222, 128, 0.4);
       color: var(--green);
       box-shadow: none;
+    }
+    .stock-note {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--hint);
+      opacity: 0.78;
+      white-space: nowrap;
     }
 
     /* Выезжающая панель корзины (справа) */
@@ -288,7 +281,7 @@
       cursor: pointer;
     }
 
-    /* Сворачиваемая инструкция в корзине */
+    /* Сворачиваемая инструкция (в каталоге и в корзине) */
     .cart-guide {
       background: rgba(139, 92, 246, 0.08);
       border: 1px solid rgba(139, 92, 246, 0.32);
@@ -421,27 +414,54 @@
       display: flex; justify-content: space-between; align-items: center; gap: 8px;
     }
     .pay-btn.active { border-color: var(--accent); background: var(--accent-soft); }
-    .pay-btn span { font-size: 12px; color: var(--hint); text-align: right; }
+    .pay-btn span { font-size: 12px; color: var(--hint); text-align: right; white-space: nowrap; }
 
+    .promo-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
     .comment-input {
       width: 100%; padding: 12px; border-radius: 12px;
       border: 1px solid var(--card-border);
       background: var(--bg); color: var(--text);
       font-size: 14px; outline: none;
+      transition: border-color 0.18s;
     }
     .comment-input:focus { border-color: var(--accent); }
     .comment-input.promo-valid { border-color: var(--green); }
+    .comment-input.promo-error { border-color: var(--danger); }
 
-    .promo-status {
+    .apply-promo-btn {
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .promo-error-text {
       margin-top: 7px;
       font-size: 11.5px;
-      color: var(--hint);
-      line-height: 1.35;
+      color: var(--danger);
+      font-weight: 600;
+      display: none;
     }
-    .promo-status.applied {
+    .promo-error-text.show { display: block; }
+
+    .promo-applied-badge {
+      margin-top: 7px;
+      font-size: 11.5px;
       color: var(--green);
       font-weight: 600;
+      display: none;
     }
+    .promo-applied-badge.show { display: block; }
 
     .summary-row {
       display: flex; justify-content: space-between;
@@ -490,10 +510,12 @@
       margin-bottom: 8px;
     }
     .promo-badge.fire { color: #fdba74; background: rgba(249, 115, 22, 0.16); }
-    .promo-title { font-size: 16px; font-weight: 800; margin-bottom: 8px; }
+    .promo-title { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+    .promo-slogan { font-size: 13px; font-weight: 700; color: #e9d5ff; margin-bottom: 8px; }
     .promo-desc { font-size: 13px; color: var(--hint); line-height: 1.5; }
     .promo-desc b { color: var(--text); }
-    .promo-list { margin-top: 10px; list-style: none; display: flex; flex-direction: column; gap: 7px; font-size: 13px; }
+    .promo-list { margin-top: 10px; list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 12.5px; }
+    .promo-list li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* Вкладка Инфо */
     .channel-box {
@@ -555,20 +577,10 @@
       font-weight: 600;
       cursor: pointer;
       flex: 1;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
+      transition: color 0.2s;
     }
     .nav-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
     .nav-item.active { color: var(--accent); }
-    .nav-item.has-items {
-      background: var(--accent-soft);
-      border-color: rgba(139, 92, 246, 0.5);
-      color: #e9d5ff;
-    }
-    .nav-item.has-items.active {
-      background: rgba(139, 92, 246, 0.26);
-      border-color: var(--accent);
-      color: #fff;
-    }
     .cart-badge {
       position: absolute;
       top: 1px;
@@ -597,16 +609,24 @@
       <div class="brand-dot"></div>
       <div class="brand">District<span>Puff</span></div>
     </div>
-    <div class="brand-tagline">Самые дешёвые цены • Акции • Скидки</div>
+    <div class="brand-tagline">Низкие цены • Акции • Скидки</div>
   </div>
 
   <!-- ВКЛАДКА 1: КАТАЛОГ -->
   <div id="tab-catalog" class="tab-content active">
-    <div class="info-banners">
-      <div class="mini-banner guide">
-        <span>Выбирай нужные позиции в каталоге, переходи во вкладку «Корзина» и смотри инструкцию</span>
+    <details class="cart-guide">
+      <summary>
+        <span class="guide-title-wrap">
+          <span class="important-mark">!</span>
+          <span>Как оформить заказ <span class="important-text">(Важно)</span></span>
+        </span>
+      </summary>
+      <div class="cart-guide-body">
+        1. Выбери нужные товары в каталоге и нажми <b>«+ Купить»</b>.<br>
+        2. Перейди во вкладку <b>«Корзина»</b> внизу экрана.<br>
+        3. Следуй инструкции там, чтобы завершить заказ.
       </div>
-    </div>
+    </details>
 
     <div class="categories" id="categories"></div>
     <div class="grid" id="catalog"></div>
@@ -615,14 +635,14 @@
   <!-- ВКЛАДКА 3: АКЦИИ -->
   <div id="tab-promos" class="tab-content">
     <div class="promo-card featured">
-      <div class="promo-badge fire">🎉 Розыгрыш на 75 подписчиков</div>
-      <div class="promo-title">Покупай позиции — забирай номерки</div>
+      <div class="promo-badge fire">🎉 Розыгрыш на 70 подписчиков</div>
+      <div class="promo-slogan">Покупай — Выигрывай</div>
       <div class="promo-desc">
-        Как только добьём <b>75 подписчиков</b> в ТГК, за каждую купленную позицию выдаём номерок (больше позиций = больше шансов). Выберем 3 победителей рандомайзером:
+        Как только добьём <b>70 подписчиков</b> в ТГК, за каждую купленную позицию выдаём номерок. Выберем 3 победителей:
       </div>
       <ul class="promo-list">
-        <li>🥇 <b>1 место</b> — любая жижа на выбор + The Chillers / My yummy</li>
-        <li>🥈 <b>2 место</b> — любой картридж + The Chillers / My yummy</li>
+        <li>🥇 <b>1 место</b> — жижа на выбор + The Chillers / My yummy</li>
+        <li>🥈 <b>2 место</b> — картридж + The Chillers / My yummy</li>
         <li>🥉 <b>3 место</b> — жидкость The Chillers / My yummy</li>
       </ul>
     </div>
@@ -639,14 +659,20 @@
 
     <div class="promo-card">
       <div class="promo-badge">🎁 Акция 2</div>
-      <div class="promo-title">Приведи соседа — скидка растёт</div>
+      <div class="promo-title">Приведи соседа</div>
       <div class="promo-desc">
-        Скидываешь другу ссылку на канал → он подписывается, делает первый заказ и говорит, что от тебя:<br><br>
-        • 1-й сосед — скидка <b>-2 BYN</b><br>
-        • 2-й сосед — скидка <b>-5 BYN</b><br>
-        • 3-й сосед — скидка <b>-9 BYN</b><br>
-        <i>(+1 BYN к шагу за каждого нового человека)</i><br><br>
-        📋 <b>Все скидки складываются!</b>
+        Друг подписывается на канал, делает первый заказ и указывает тебя в комментарии:<br>
+        • <b>−2 BYN</b> за каждого соседа<br>
+        • Действует <b>только на жидкости</b><br>
+        • Цена жидкости не может стать ниже <b>2 BYN</b>
+      </div>
+    </div>
+
+    <div class="promo-card">
+      <div class="promo-badge">🏷️ Акция 3</div>
+      <div class="promo-title">Скидка по промокоду</div>
+      <div class="promo-desc">
+        Вводи промокод в корзине и жми «Применить» — получи скидку <b>−1 BYN</b> на заказ.
       </div>
     </div>
   </div>
@@ -655,22 +681,22 @@
   <div id="tab-channel" class="tab-content">
     <div class="channel-box">
       <div class="channel-title">Канал DistrictPuff</div>
-      <div class="channel-desc">Свежие завозы, розыгрыш на 75 подписчиков и актуальное наличие — всё в нашем Telegram-канале.</div>
+      <div class="channel-desc">Свежие завозы, розыгрыш на 70 подписчиков и актуальное наличие — всё в нашем Telegram-канале.</div>
       <button class="tg-btn" onclick="openChannel()">Перейти в Telegram-канал</button>
     </div>
 
     <div class="info-card">
       <strong>💳 Способы оплаты</strong>
       1. <b>Наличкой</b> — без доплат.<br>
-      2. <b>На карту (Альфа-банк)</b> — +1 BYN ко всей стоимости заказа.<br>
-      3. <b>В долг (до недели)</b> — +1 BYN к каждой позиции.<br>
-      4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN за карту и +1 BYN к каждой позиции.<br><br>
-      <i>Комиссии не распространяются на под-системы и услуги (залить жижу, взять сигарету).</i>
+      2. <b>На карту (Альфа-банк)</b> — +1 BYN к заказу.<br>
+      3. <b>В долг (до недели)</b> — +1 BYN за позиц.<br>
+      4. <b>В долг + на карту (Альфа-банк)</b> — +1 BYN к заказу + 1 BYN за позиц.<br><br>
+      <i>Комиссии не распространяются на под-системы и услуги.</i>
     </div>
 
     <div class="info-card">
       <strong>📥 Как оформить заказ</strong>
-      Выбирай нужные позиции в каталоге, переходи во вкладку <b>«Корзина»</b>, выбирай способ оплаты, указывай свой <b>@username</b> и жми <b>«Оформить заказ»</b>.
+      Выбирай нужные позиции в каталоге, открывай <b>«Корзину»</b>, выбирай способ оплаты, указывай свой <b>@username</b> и жми <b>«Оформить заказ»</b>.
     </div>
   </div>
 
@@ -692,8 +718,8 @@
       <div class="cart-guide-body">
         1. Проверь выбранные позиции в корзине.<br>
         2. Выбери удобный способ оплаты.<br>
-        3. Введи промокод в специальное поле, если он у тебя есть.<br>
-        4. Напиши свой <b>@username</b> в комментарии (и от кого пришёл, если по акции <b>«Приведи соседа»</b>).<br>
+        3. Введи промокод и нажми «Применить» <i>(менеджер проверит право на промокод; в случае чего — промокод аннулируется)</i>.<br>
+        4. Напиши свой <b>@username</b> в комментарии.<br>
         5. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
       </div>
     </details>
@@ -715,21 +741,25 @@
             💵 Наличкой <span>без доплат</span>
           </button>
           <button class="pay-btn" onclick="selectPayment('card', 'На карту (Альфа-банк)', this)">
-            💳 На карту (Альфа-банк) <span>+1 BYN ко всему заказу</span>
+            💳 На карту (Альфа-банк) <span>+1 BYN к заказу</span>
           </button>
           <button class="pay-btn" onclick="selectPayment('debt', 'В долг (до недели)', this)">
-            🤝 В долг (до недели) <span>+1 BYN за позицию</span>
+            🤝 В долг (до недели) <span>+1 BYN за позиц.</span>
           </button>
           <button class="pay-btn" onclick="selectPayment('debt_card', 'В долг + на карту (Альфа-банк)', this)">
-            🤝💳 В долг + на карту <span>+1 BYN за карту и +1 BYN / поз.</span>
+            🤝💳 В долг + на карту <span>+1 BYN к заказу + 1 BYN за позиц.</span>
           </button>
         </div>
       </div>
 
       <div class="box-card">
         <div class="pay-label">Промокод</div>
-        <input type="text" class="comment-input" id="promo-input" placeholder="Введи промокод" oninput="onPromoInput(this.value)" />
-        <div class="promo-status" id="promo-status">Менеджер проверит, доступен ли вам промокод</div>
+        <div class="promo-row">
+          <input type="text" class="comment-input" id="promo-input" placeholder="Введи промокод" oninput="resetPromoState()" />
+          <button type="button" class="apply-promo-btn" onclick="applyPromo()">Применить</button>
+        </div>
+        <div class="promo-error-text" id="promo-error">Такого промокода не существует</div>
+        <div class="promo-applied-badge" id="promo-applied">✓ Промокод применён (−1 BYN)</div>
       </div>
 
       <div class="box-card">
@@ -773,9 +803,13 @@
 
     // ================= НАСТРОЙКИ =================
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
+    const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Бюджет"]);
     const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
-    const ACTIVE_PROMO = "круглобуф";
+    const NO_STOCK_NOTE_CATEGORIES = new Set(["Услуги", "Картриджи"]);
+    const VALID_PROMOS = new Set(["круглобуф", "Круглобуф"]);
     const PROMO_DISCOUNT_AMOUNT = 1;
+    const NEIGHBOR_DISCOUNT_PER_PERSON = 2;
+    const MIN_LIQUID_PRICE = 2;
 
     const CATEGORIES = [
       { id: "Премиум", label: "💎 Премиум" },
@@ -810,7 +844,7 @@
       // Девайсы и под-системы
       { id: 11, category: "Девайсы", img: "https://i.postimg.cc/4y2Tyzhh/IMG-9831.jpg", tag: "POD-системы", name: "Aspire Dabbler Nice POD", flavor: "", price: 10, oldPrice: 15 },
 
-      // Услуги (бесплатно, 1 раз на человека)
+      // Услуги (бесплатно, одна на человека)
       { id: 12, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 0, oldPrice: null },
       { id: 13, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 0, oldPrice: null },
       { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null }
@@ -822,8 +856,9 @@
     let isCartOpen = false;
     let paymentCode = "cash";
     let paymentMethod = "Наличкой";
-    let promoCode = "";
-    const cart = new Set(); // Максимум 1 шт каждой позиции
+    let appliedPromo = "";
+    let neighborCount = 0;
+    const cart = new Set();
 
     function formatPrice(val) {
       return Number.isInteger(val) ? String(val) : val.toFixed(2);
@@ -833,20 +868,39 @@
       try { if (tg) tg.HapticFeedback.impactOccurred("light"); } catch (e) {}
     }
 
-    function onPromoInput(val) {
-      promoCode = val.trim();
-      const isValid = promoCode.toLowerCase() === ACTIVE_PROMO;
+    function resetPromoState() {
       const inputEl = document.getElementById("promo-input");
-      const statusEl = document.getElementById("promo-status");
-
-      if (isValid) {
-        inputEl.classList.add("promo-valid");
-        statusEl.classList.add("applied");
-        statusEl.textContent = "✓ Промокод применён (−1 BYN). Менеджер проверит, доступен ли он вам";
-      } else {
+      const errorEl = document.getElementById("promo-error");
+      const appliedEl = document.getElementById("promo-applied");
+      inputEl.classList.remove("promo-error");
+      errorEl.classList.remove("show");
+      if (appliedPromo && inputEl.value.trim() !== appliedPromo) {
+        appliedPromo = "";
         inputEl.classList.remove("promo-valid");
-        statusEl.classList.remove("applied");
-        statusEl.textContent = "Менеджер проверит, доступен ли вам промокод";
+        appliedEl.classList.remove("show");
+        renderCartSummary();
+      }
+    }
+
+    function applyPromo() {
+      haptic();
+      const inputEl = document.getElementById("promo-input");
+      const errorEl = document.getElementById("promo-error");
+      const appliedEl = document.getElementById("promo-applied");
+      const val = inputEl.value.trim();
+
+      if (VALID_PROMOS.has(val)) {
+        appliedPromo = val;
+        inputEl.classList.remove("promo-error");
+        inputEl.classList.add("promo-valid");
+        errorEl.classList.remove("show");
+        appliedEl.classList.add("show");
+      } else {
+        appliedPromo = "";
+        inputEl.classList.remove("promo-valid");
+        inputEl.classList.add("promo-error");
+        appliedEl.classList.remove("show");
+        errorEl.classList.add("show");
       }
       renderCartSummary();
     }
@@ -921,7 +975,7 @@
       if (currentCategory === "Услуги") {
         const note = document.createElement("div");
         note.className = "service-limit-note";
-        note.innerHTML = "🎁 <b>Бесплатно</b> • 1 раз на человека";
+        note.innerHTML = "🎁 <b>Бесплатно</b> • Одна на человека";
         el.appendChild(note);
       }
 
@@ -931,6 +985,7 @@
         const isAdded = cart.has(p.id);
         const isFree = p.price === 0;
         const hasSale = !isFree && p.oldPrice && p.oldPrice > p.price;
+        const showSingleStock = isAdded && !NO_STOCK_NOTE_CATEGORIES.has(p.category);
         const card = document.createElement("div");
         card.className = "card" + (isAdded ? " in-cart" : "");
         card.innerHTML = `
@@ -949,9 +1004,12 @@
               }
             </div>
           </div>
-          <button class="add-btn ${isAdded ? "added" : ""}" onclick="toggleItem(${p.id})">
-            ${isAdded ? "✓ В корзине" : "+ Купить"}
-          </button>
+          <div class="card-action">
+            <button class="add-btn ${isAdded ? "added" : ""}" onclick="toggleItem(${p.id})">
+              ${isAdded ? "✓ В корзине" : "+ Купить"}
+            </button>
+            ${showSingleStock ? `<span class="stock-note">В наличии 1 шт.</span>` : ""}
+          </div>
         `;
         el.appendChild(card);
       });
@@ -964,7 +1022,6 @@
       if (cart.has(id)) {
         cart.delete(id);
       } else {
-        // Лимит: максимум 1 бесплатная услуга
         if (product && product.category === "Услуги") {
           PRODUCTS.forEach(p => {
             if (p.category === "Услуги") cart.delete(p.id);
@@ -978,14 +1035,11 @@
 
     function updateBadge() {
       const badge = document.getElementById("cart-badge");
-      const navCart = document.getElementById("nav-cart");
       if (cart.size > 0) {
         badge.textContent = cart.size;
         badge.classList.add("show");
-        navCart.classList.add("has-items");
       } else {
         badge.classList.remove("show");
-        navCart.classList.remove("has-items");
       }
     }
 
@@ -996,6 +1050,8 @@
       let hasCartridge = false;
       let hasPremium = false;
       let hasClassicOrBudget = false;
+      let liquidsBaseSum = 0;
+      let liquidsCount = 0;
 
       cart.forEach(id => {
         const p = PRODUCTS.find(x => x.id === id);
@@ -1006,22 +1062,32 @@
           if (p.category === "Картриджи") hasCartridge = true;
           if (p.category === "Премиум") hasPremium = true;
           if (p.category === "Классика" || p.category === "Бюджет") hasClassicOrBudget = true;
+          if (LIQUID_CATEGORIES.has(p.category)) {
+            liquidsBaseSum += p.price;
+            liquidsCount += 1;
+          }
         }
       });
 
+      // Акция 1: Комплект (жижа + картридж)
       let comboDiscount = 0;
-      let comboLabel = "";
       if (hasCartridge) {
         if (hasPremium) {
           comboDiscount = 2;
-          comboLabel = "Комплект: Премиум + картридж";
         } else if (hasClassicOrBudget) {
           comboDiscount = 1;
-          comboLabel = "Комплект: Жижа + картридж";
         }
       }
 
-      const promoApplied = promoCode.toLowerCase() === ACTIVE_PROMO && baseTotal > 0;
+      // Акция 2: Приведи соседа (−2 BYN за каждого соседа, только на жидкости, цена жидкости не ниже 2 BYN)
+      let neighborDiscount = 0;
+      if (neighborCount > 0 && liquidsCount > 0) {
+        const maxPossibleLiquidDiscount = Math.max(0, liquidsBaseSum - liquidsCount * MIN_LIQUID_PRICE);
+        neighborDiscount = Math.min(neighborCount * NEIGHBOR_DISCOUNT_PER_PERSON, maxPossibleLiquidDiscount);
+      }
+
+      // Акция 3: Промокод (−1 BYN)
+      const promoApplied = Boolean(appliedPromo) && baseTotal > 0;
       const promoDiscount = promoApplied ? PROMO_DISCOUNT_AMOUNT : 0;
 
       let fee = 0;
@@ -1033,15 +1099,16 @@
         fee = (eligibleCount > 0 ? 1 : 0) + eligibleCount;
       }
 
-      const total = Math.max(0, +(baseTotal - comboDiscount - promoDiscount + fee).toFixed(2));
+      const total = Math.max(0, +(baseTotal - comboDiscount - neighborDiscount - promoDiscount + fee).toFixed(2));
       const comment = document.getElementById("comment").value.trim() || "Без комментария";
       return {
         items,
         total,
         baseTotal: +baseTotal.toFixed(2),
         comboDiscount,
-        comboLabel,
-        promoCode: promoApplied ? ACTIVE_PROMO : "",
+        neighborCount,
+        neighborDiscount: +neighborDiscount.toFixed(2),
+        promoCode: promoApplied ? appliedPromo : "",
         promoDiscount,
         fee,
         eligibleCount,
@@ -1061,13 +1128,14 @@
 
     function renderCartSummary() {
       if (cart.size === 0) return;
-      const { items, baseTotal, comboDiscount, comboLabel, promoDiscount, fee, total } = getOrderData();
+      const { items, baseTotal, comboDiscount, neighborDiscount, promoDiscount, fee, total } = getOrderData();
       document.getElementById("cart-summary").innerHTML = `
         <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
         <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
-        ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 ${comboLabel}</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
-        ${promoDiscount > 0 ? `<div class="summary-row discount"><span>🏷️ Промокод (${ACTIVE_PROMO})</span><span>−${formatPrice(promoDiscount)} BYN</span></div>` : ""}
-        ${fee > 0 ? `<div class="summary-row"><span>Комиссия (${paymentMethod})</span><span>+${formatPrice(fee)} BYN</span></div>` : ""}
+        ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 Комплект</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
+        ${neighborDiscount > 0 ? `<div class="summary-row discount"><span>👥 Соседи</span><span>−${formatPrice(neighborDiscount)} BYN</span></div>` : ""}
+        ${promoDiscount > 0 ? `<div class="summary-row discount"><span>🏷️ Промокод</span><span>−${formatPrice(promoDiscount)} BYN</span></div>` : ""}
+        ${fee > 0 ? `<div class="summary-row"><span>Комиссия</span><span>+${formatPrice(fee)} BYN</span></div>` : ""}
         <div class="summary-row total"><span>Итого к оплате</span><span>${formatPrice(total)} BYN</span></div>
       `;
       document.getElementById("confirm-btn").textContent = `Оформить заказ • ${formatPrice(total)} BYN`;
