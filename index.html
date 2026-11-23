@@ -438,6 +438,12 @@
       white-space: nowrap;
       letter-spacing: 0.3px;
     }
+    .delivery-btn .free-badge {
+      display: none;
+    }
+    .delivery-btn.active .free-badge {
+      display: inline-block;
+    }
 
     .comment-helper {
       margin-top: 7px;
@@ -628,6 +634,10 @@
       transition: transform 0.2s ease;
     }
     .accordion-card[open] .acc-arrow { transform: rotate(180deg); }
+    .accordion-card .acc-label-open { display: none; }
+    .accordion-card[open] .acc-label-closed { display: none; }
+    .accordion-card[open] .acc-label-open { display: inline; }
+
     .accordion-body {
       margin-top: 12px;
       padding-top: 12px;
@@ -677,10 +687,25 @@
     }
     .channel-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); }
     .channel-desc { font-size: 13px; color: #e4e4e7; margin-bottom: 16px; line-height: 1.45; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7); }
+    .channel-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
     .tg-btn {
       width: 100%; padding: 14px; border-radius: 12px; border: none;
       background: #2aabee; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer;
       box-shadow: 0 4px 14px rgba(42, 171, 238, 0.35);
+    }
+    .manager-btn {
+      width: 100%; padding: 12px; border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(15, 18, 28, 0.72);
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
     }
     .info-card {
       background: var(--card);
@@ -807,7 +832,11 @@
           <div class="promo-title">Комплект: Жижа + картридж</div>
           <div class="acc-sub">Скидка до −2 BYN</div>
         </div>
-        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
       </summary>
       <div class="accordion-body">
         Добавляй в корзину <b>жидкость + картридж</b> — скидка посчитается автоматически:
@@ -826,7 +855,11 @@
           <div class="promo-title">Приведи соседа</div>
           <div class="acc-sub">Скидка −2 BYN за каждого друга</div>
         </div>
-        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
       </summary>
       <div class="accordion-body">
         Зови друзей и соседей в DistrictPuff — получай скидку за каждого друга:<br><br>
@@ -844,7 +877,11 @@
           <div class="promo-title">Скидка по промокоду</div>
           <div class="acc-sub">−1 BYN на заказ в корзине</div>
         </div>
-        <span class="acc-toggle">Подробнее <span class="acc-arrow">▾</span></span>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
       </summary>
       <div class="accordion-body">
         Есть промокод от наших партнёров или менеджера? Вводи его в поле промокода в корзине и жми <b>«Применить»</b> — скидка <b>−1 BYN</b> сразу вычтется из итога.
@@ -858,7 +895,10 @@
     <div class="channel-box">
       <div class="channel-title">Канал DistrictPuff</div>
       <div class="channel-desc">Свежие завозы, розыгрыш на 70 подписчиков и актуальное наличие — всё в нашем Telegram-канале.</div>
-      <button class="tg-btn" onclick="openChannel()">Перейти в Telegram-канал</button>
+      <div class="channel-actions">
+        <button class="tg-btn" onclick="openChannel()">Перейти в Telegram-канал</button>
+        <button class="manager-btn" onclick="openManager()">💬 Написать менеджеру</button>
+      </div>
     </div>
 
     <div class="info-card">
@@ -877,7 +917,11 @@
           <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">💳 Способы оплаты</div>
           <div class="acc-sub">Наличка, карта, в долг</div>
         </div>
-        <span class="acc-toggle">Открыть <span class="acc-arrow">▾</span></span>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
       </summary>
       <div class="accordion-body">
         1. <b>Наличкой</b> — без доплат.<br>
@@ -894,7 +938,11 @@
           <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">📥 Как оформить заказ</div>
           <div class="acc-sub">Пошаговая инструкция</div>
         </div>
-        <span class="acc-toggle">Открыть <span class="acc-arrow">▾</span></span>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
       </summary>
       <div class="accordion-body">
         1. Выбери товары в каталоге и нажми <b>«+ Купить»</b>.<br>
@@ -959,7 +1007,7 @@
               <div>🚶 Самовывоз</div>
               <div class="delivery-sub">забрать самому</div>
             </div>
-            <span class="opt-sub">уточнить в ЛС</span>
+            <span class="free-badge">БЕСПЛАТНО</span>
           </button>
         </div>
       </div>
@@ -1041,6 +1089,7 @@
     const BOT_TOKEN = "9051670683:AAEgc3aap1jii7BrlYyXOa5ZRePFfhszMUw";
     const ORDERS_CHANNEL_ID = "-1004420885371";
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
+    const MANAGER_URL = "https://t.me/makario08";
     const STOCK_STORAGE_KEY = "dp_stocks_v1";
 
     const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Бюджет"]);
@@ -1204,6 +1253,7 @@
           ? "Куда доставить и во сколько?"
           : "Когда удобно забрать заказ?";
       }
+      renderCartSummary();
     }
 
     function openCart() {
@@ -1249,6 +1299,15 @@
         tg.openTelegramLink(CHANNEL_URL);
       } else {
         window.open(CHANNEL_URL, "_blank");
+      }
+    }
+
+    function openManager() {
+      haptic();
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(MANAGER_URL);
+      } else {
+        window.open(MANAGER_URL, "_blank");
       }
     }
 
@@ -1440,6 +1499,7 @@
       document.getElementById("cart-summary").innerHTML = `
         <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
         <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
+        ${deliveryCode === "delivery" ? `<div class="summary-row discount"><span>🚚 Доставка</span><span>Бесплатно</span></div>` : ""}
         ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 Комплект</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
         ${neighborDiscount > 0 ? `<div class="summary-row discount"><span>👥 Соседи</span><span>−${formatPrice(neighborDiscount)} BYN</span></div>` : ""}
         ${promoDiscount > 0 ? `<div class="summary-row discount"><span>🏷️ Промокод</span><span>−${formatPrice(promoDiscount)} BYN</span></div>` : ""}
