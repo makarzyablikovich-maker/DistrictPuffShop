@@ -1168,7 +1168,10 @@
     async function syncStocksFromSheet() {
       if (!SHEET_API_URL) return;
       try {
-        const res = await fetch(SHEET_API_URL);
+        const res = await fetch(`${SHEET_API_URL}?t=${Date.now()}`, {
+          method: "GET",
+          redirect: "follow"
+        });
         const data = await res.json();
         if (data && data.ok && data.stocks) {
           applyStocksMap(data.stocks);
@@ -1595,6 +1598,7 @@
         if (SHEET_API_URL) {
           const res = await fetch(SHEET_API_URL, {
             method: "POST",
+            redirect: "follow",
             headers: { "Content-Type": "text/plain;charset=utf-8" },
             body: JSON.stringify({
               client: `${tgName} (${tgUsername})`,
@@ -1603,7 +1607,7 @@
             })
           });
           const data = await res.json();
-          if (!data || !data.ok) throw new Error("Sheet API error");
+          if (!data || !data.ok) throw new Error(data && data.error ? data.error : "Sheet API error");
           if (data.stocks) applyStocksMap(data.stocks);
         } else {
           const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
