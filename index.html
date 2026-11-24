@@ -81,7 +81,7 @@
       text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     }
 
-    /* Плашка лимита для бесплатных услуг */
+    /* Плашки-подсказки в категориях */
     .service-limit-note {
       background: var(--green-soft);
       border: 1px solid rgba(74, 222, 128, 0.28);
@@ -94,6 +94,17 @@
     }
     .service-limit-note b { color: var(--green); }
 
+    .bron-limit-note {
+      background: rgba(251, 146, 60, 0.12);
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      color: #fed7aa;
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: center;
+    }
+
     /* Вкладки контента */
     .tab-content { display: none; animation: fadeIn 0.2s ease; }
     .tab-content.active { display: block; }
@@ -102,7 +113,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Сетка категорий 2x3 */
+    /* Сетка категорий 2x3 + широкая Бронь */
     .categories {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -123,6 +134,12 @@
       font-weight: 600;
       cursor: pointer;
       transition: all 0.18s ease;
+    }
+    .cat-btn.wide {
+      grid-column: 1 / -1;
+      padding: 9px 10px;
+      border-color: rgba(251, 146, 60, 0.35);
+      color: #fed7aa;
     }
     .cat-btn.active {
       background: var(--accent);
@@ -178,6 +195,10 @@
       padding: 3px 7px;
       border-radius: 6px;
     }
+    .tag.bron {
+      color: #fed7aa;
+      background: rgba(251, 146, 60, 0.18);
+    }
     .name { font-weight: 800; font-size: 15px; margin-bottom: 3px; }
     .name.no-flavor { margin-bottom: 9px; }
     .flavor { font-size: 13px; color: var(--hint); margin-bottom: 9px; line-height: 1.35; }
@@ -200,7 +221,7 @@
       text-decoration-thickness: 1.5px;
     }
 
-    /* Кнопка добавления и пометка наличия */
+    /* Кнопка добавления, счётчик и пометка наличия */
     .card-action {
       display: flex;
       flex-direction: column;
@@ -227,11 +248,45 @@
       color: var(--green);
       box-shadow: none;
     }
+    .qty-stepper {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-soft);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      border-radius: 12px;
+      padding: 4px 6px;
+    }
+    .qty-btn {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      border: none;
+      background: rgba(74, 222, 128, 0.2);
+      color: var(--green);
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .qty-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    .qty-val {
+      min-width: 18px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--green);
+    }
     .stock-note {
       font-size: 10px;
       font-weight: 500;
       color: var(--hint);
-      opacity: 0.78;
+      opacity: 0.85;
       white-space: nowrap;
     }
 
@@ -391,10 +446,49 @@
     }
     .cart-item-info { flex: 1; min-width: 0; }
     .cart-item-name { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .bron-inline-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      color: #fed7aa;
+      background: rgba(251, 146, 60, 0.2);
+      border: 1px solid rgba(251, 146, 60, 0.35);
+      padding: 1px 5px;
+      border-radius: 5px;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
     .cart-item-flavor { font-size: 12px; color: var(--hint); }
-    .cart-item-right { display: flex; align-items: center; gap: 10px; }
+    .cart-item-right { display: flex; align-items: center; gap: 8px; }
     .cart-item-price { font-size: 14px; font-weight: 800; white-space: nowrap; }
     .cart-item-price.free { color: var(--green); }
+    .cart-mini-stepper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 2px 4px;
+    }
+    .cart-mini-btn {
+      width: 22px;
+      height: 22px;
+      border: none;
+      border-radius: 6px;
+      background: var(--card-elevated);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .cart-mini-btn:disabled { opacity: 0.35; }
+    .cart-mini-qty {
+      min-width: 16px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
     .remove-btn {
       width: 28px; height: 28px;
       border-radius: 8px;
@@ -438,17 +532,26 @@
       white-space: nowrap;
       letter-spacing: 0.3px;
     }
-    .delivery-btn .free-badge {
+    .delivery-btn .free-badge { display: none; }
+    .delivery-btn.active .free-badge { display: inline-block; }
+
+    .bron-mixed-note {
+      margin-top: 9px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(251, 146, 60, 0.1);
+      border: 1px solid rgba(251, 146, 60, 0.28);
+      font-size: 11.5px;
+      color: #fed7aa;
+      line-height: 1.4;
       display: none;
     }
-    .delivery-btn.active .free-badge {
-      display: inline-block;
-    }
+    .bron-mixed-note.show { display: block; }
 
     .comment-helper {
       margin-top: 7px;
       font-size: 11.5px;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.45);
       padding-left: 2px;
     }
 
@@ -800,7 +903,7 @@
         </span>
       </summary>
       <div class="cart-guide-body">
-        1. Выбери товары и нажми <b>«+ Купить»</b>.<br>
+        1. Выбери товары и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для картриджей можно выбрать нужное количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана.<br>
         3. Следуй инструкции там, чтобы завершить заказ.
       </div>
@@ -842,7 +945,7 @@
         Добавляй в корзину <b>жидкость + картридж</b> — скидка посчитается автоматически:
         <div class="combo-lines">
           <div class="combo-line">• <b>Премиум + картридж</b> — скидка <b>−2 BYN</b></div>
-          <div class="combo-line">• <b>Классика / Бюджет + картридж</b> — <b>−1 BYN</b></div>
+          <div class="combo-line">• <b>Классика / Крепкие + картридж</b> — <b>−1 BYN</b></div>
         </div>
         <div class="ps-note">Никаких промокодов вводить не нужно — сумма пересчитается сама.</div>
       </div>
@@ -928,7 +1031,25 @@
         2. <b>На карту</b> — +1 BYN к заказу.<br>
         3. <b>В долг (до недели)</b> — +1 BYN за позиц.<br>
         4. <b>В долг + на карту</b> — +1 BYN за позиц.
-        <div class="ps-note">Комиссии не распространяются на под-системы и услуги.</div>
+        <div class="ps-note">Комиссии не распространяются на под-системы и услуги. Для товаров из «Брони» доплаты за долг нет (на карту +1 BYN).</div>
+      </div>
+    </details>
+
+    <details class="accordion-card">
+      <summary>
+        <div class="acc-left">
+          <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">⏳ Бронь и В долг — в чём разница?</div>
+          <div class="acc-sub">Предзаказ vs покупка сейчас</div>
+        </div>
+        <span class="acc-toggle">
+          <span class="acc-label-closed">Подробнее</span>
+          <span class="acc-label-open">Скрыть</span>
+          <span class="acc-arrow">▾</span>
+        </span>
+      </summary>
+      <div class="accordion-body">
+        • <b>Бронь</b> — закрепляешь товар заранее, забираешь и платишь, <b>когда будет в наличии</b> (без доплаты за долг; на карту +1 BYN).<br><br>
+        • <b>В долг</b> — забираешь из наличия <b>сейчас</b>, платишь позже (до недели, +1 BYN за позицию).
       </div>
     </details>
 
@@ -945,12 +1066,12 @@
         </span>
       </summary>
       <div class="accordion-body">
-        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b>.<br>
+        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для картриджей можно выбрать количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана и проверь выбранные позиции.<br>
         3. Выбери <b>способ получения</b> (бесплатная доставка или самовывоз) и <b>способ оплаты</b>.<br>
         4. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
         5. Если есть промокод — введи его в поле промокода и нажми <b>«Применить»</b>.<br>
-        6. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
+        6. Нажми <b>«Оформить заказ»</b> и <b>подожди пару секунд</b>, пока не появится надпись, что заказ оформлен — заявка улетит менеджеру, и он напишет тебе в ЛС.
         <div class="ps-note">Менеджер проверяет право на промокод — при необходимости он может быть аннулирован.</div>
       </div>
     </details>
@@ -972,19 +1093,22 @@
         </span>
       </summary>
       <div class="cart-guide-body">
-        1. Проверь выбранные позиции в корзине.<br>
+        1. Проверь выбранные позиции и количество в корзине.<br>
         2. Выбери <b>способ получения</b> (доставка или самовывоз) и <b>способ оплаты</b>.<br>
         3. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
         4. Если есть промокод — введи его в поле промокода и нажми <b>«Применить»</b>.<br>
-        5. Нажми <b>«Оформить заказ»</b> — заявка улетит менеджеру, и он напишет тебе в ЛС.
-        <div class="ps-note">Менеджер проверяет право на промокод — при необходимости он может быть аннулирован.</div>
+        5. Нажми <b>«Оформить заказ»</b> и <b>подожди пару секунд</b>, пока не появится надпись, что заказ оформлен — заявка улетит менеджеру, и он напишет тебе в ЛС.
+        <div class="ps-note">
+          Бронь — предзаказ до появления в наличии (без доплаты за долг). В долг — из наличия сейчас, оплата позже.<br>
+          Менеджер проверяет право на промокод — при необходимости он может быть аннулирован.
+        </div>
       </div>
     </details>
 
     <div id="cart-empty" class="empty-cart">
       <div class="empty-icon">🛒</div>
       <div class="empty-title">Корзина пока пуста</div>
-      <div class="empty-desc">Выбери нужные позиции в каталоге — каждая добавляется по 1 шт.</div>
+      <div class="empty-desc">Выбери нужные позиции в каталоге и добавь их в корзину.</div>
       <button class="go-catalog-btn" onclick="closeCart()">Перейти в каталог</button>
     </div>
 
@@ -995,20 +1119,23 @@
       <div class="box-card">
         <div class="pay-label">Способ получения</div>
         <div class="pay-options">
-          <button class="delivery-btn active" onclick="selectDelivery('delivery', 'Доставка (обговаривается с менеджером)', this)">
+          <button class="delivery-btn active" id="del-btn-delivery" onclick="selectDelivery('delivery', this)">
             <div class="delivery-left">
               <div>🚚 Доставка</div>
-              <div class="delivery-sub">обговаривается с менеджером</div>
+              <div class="delivery-sub" id="delivery-sub-text">обговаривается с менеджером</div>
             </div>
             <span class="free-badge">БЕСПЛАТНО</span>
           </button>
-          <button class="delivery-btn" onclick="selectDelivery('pickup', 'Самовывоз (забрать самому)', this)">
+          <button class="delivery-btn" id="del-btn-pickup" onclick="selectDelivery('pickup', this)">
             <div class="delivery-left">
               <div>🚶 Самовывоз</div>
-              <div class="delivery-sub">забрать самому</div>
+              <div class="delivery-sub" id="pickup-sub-text">забрать самому</div>
             </div>
             <span class="free-badge">БЕСПЛАТНО</span>
           </button>
+        </div>
+        <div class="bron-mixed-note" id="bron-mixed-note">
+          ℹ️ Бронь отдадим, когда будет в наличии (или всё вместе — укажи в комментарии)
         </div>
       </div>
 
@@ -1033,7 +1160,7 @@
       <div class="box-card">
         <div class="pay-label">Комментарий к заказу</div>
         <input type="text" class="comment-input" id="comment" placeholder="Куда доставить и во сколько?" />
-        <div class="comment-helper">Детали уточним с менеджером</div>
+        <div class="comment-helper" id="comment-helper">Детали уточним с менеджером</div>
       </div>
 
       <!-- Плашка расчёта со встроенным компактным промокодом -->
@@ -1084,16 +1211,15 @@
     // ================= НАСТРОЙКИ =================
     const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbz1JcEUOahFdlil-yzOcsAxJ5N6THReu74dIYDISXsmWOrjCSybrhtsuGSQ6mX4MooaBw/exec";
 
-    // Запасной вариант (работает, пока SHEET_API_URL пустой)
     const BOT_TOKEN = "9051670683:AAEgc3aap1jii7BrlYyXOa5ZRePFfhszMUw";
     const ORDERS_CHANNEL_ID = "-1004420885371";
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
     const MANAGER_URL = "https://t.me/makario08";
-    const STOCK_STORAGE_KEY = "dp_stocks_v1";
+    const STOCK_STORAGE_KEY = "dp_stocks_v4";
 
-    const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Бюджет"]);
+    const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Крепкие", "Бронь"]);
     const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
-    const NO_STOCK_NOTE_CATEGORIES = new Set(["Услуги", "Картриджи"]);
+    const NO_STOCK_NOTE_CATEGORIES = new Set(["Услуги"]);
     const VALID_PROMOS = new Set(["круглобуф", "Круглобуф"]);
     const PROMO_DISCOUNT_AMOUNT = 1;
     const NEIGHBOR_DISCOUNT_PER_PERSON = 2;
@@ -1102,48 +1228,95 @@
     const CATEGORIES = [
       { id: "Премиум", label: "💎 Премиум" },
       { id: "Классика", label: "⭐ Классика" },
-      { id: "Бюджет", label: "🪙 Бюджет" },
+      { id: "Крепкие", label: "💀 Крепкие" },
       { id: "Картриджи", label: "🔋 Картриджи" },
       { id: "Девайсы", label: "💨 Девайсы" },
-      { id: "Услуги", label: "🎁 Услуги" }
+      { id: "Услуги", label: "🎁 Услуги" },
+      { id: "Бронь", label: "⏳ Бронь", wide: true }
     ];
 
+    const IMG_HOTSPOT = "https://i.postimg.cc/VkZyBHnc/IMG-0142.jpg";
+    const IMG_CATSWILL_SOUR = "https://i.postimg.cc/3xfMCbmR/IMG-0143.jpg";
+    const IMG_CATSWILL_EXTRA = "https://i.postimg.cc/8zX8BnMc/IMG-0144.jpg";
+    const IMG_CATSWILL_CLASSIC = "https://i.postimg.cc/t4v0tmW7/IMG-0145.jpg";
+
+    function isBronProduct(p) {
+      return p.category === "Бронь" || p.category === "Картриджи";
+    }
+
     const PRODUCTS = [
-      // Премиум (stock: 1 — пропадает после покупки)
+      // Премиум (stock: 1)
       { id: 1, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Виноград яблочный сок", price: 17, oldPrice: 20, stock: 1 },
       { id: 2, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Вишня роза мята", price: 17, oldPrice: 20, stock: 1 },
       { id: 3, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Яблоко киви клубника", price: 17, oldPrice: 20, stock: 1 },
       { id: 4, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Красная слива нектарин", price: 17, oldPrice: 20, stock: 1 },
 
       // Классика (stock: 1)
-      { id: 5, category: "Классика", img: "https://i.postimg.cc/sDdrHv0r/IMG-9741.jpg", tag: "Классика • 70 mg", name: "ISTERIKA САМОУБИЙЦА", flavor: "Клубника киви мята", price: 15, oldPrice: 17, stock: 1 },
       { id: 6, category: "Классика", img: "https://i.postimg.cc/NfqcC5PY/IMG-9745.jpg", tag: "Классика • 100 mg", name: "САМОУБИЙЦА V2 Danger", flavor: "Вишневый холс", price: 15, oldPrice: 17, stock: 1 },
       { id: 7, category: "Классика", img: "https://i.postimg.cc/4Nkg2mFs/IMG-9747.jpg", tag: "Классика • 20 mg", name: "PODONKI MALAYSIAN ARCADE", flavor: "Цитрусовый микс", price: 15, oldPrice: 17, stock: 1 },
+      { id: 8, category: "Классика", img: "https://i.postimg.cc/RV5BpNbv/IMG-9752.jpg", tag: "Классика • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10, stock: 1 },
+      { id: 9, category: "Классика", img: "https://i.postimg.cc/WbLvYhfN/IMG-9752.jpg", tag: "Классика • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10, stock: 1 },
 
-      // Бюджет (stock: 1)
-      { id: 8, category: "Бюджет", img: "https://i.postimg.cc/RV5BpNbv/IMG-9752.jpg", tag: "Бюджет • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10, stock: 1 },
-      { id: 9, category: "Бюджет", img: "https://i.postimg.cc/WbLvYhfN/IMG-9752.jpg", tag: "Бюджет • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10, stock: 1 },
+      // Крепкие (stock: 1)
+      { id: 5, category: "Крепкие", img: "https://i.postimg.cc/sDdrHv0r/IMG-9741.jpg", tag: "Крепкие • 70 mg", name: "ISTERIKA САМОУБИЙЦА", flavor: "Клубника киви мята", price: 15, oldPrice: 17, stock: 1 },
 
-      // Картриджи (stock: null — не скрываются)
-      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.6Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
-      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.4Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
-      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 14, oldPrice: 15, stock: null },
+      // Картриджи (своя плашка, пока только в бронь: 4, 4, 2)
+      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Бронь • Картридж", name: "XROS 0.6Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
+      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Бронь • Картридж", name: "XROS 0.4Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
+      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Бронь • Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 14, oldPrice: 15, stock: 2 },
 
-      // Девайсы и под-системы (stock: 1)
+      // Девайсы (stock: 1)
       { id: 11, category: "Девайсы", img: "https://i.postimg.cc/4y2Tyzhh/IMG-9831.jpg", tag: "POD-системы", name: "Aspire Dabbler Nice POD", flavor: "", price: 10, oldPrice: 15, stock: 1 },
 
       // Услуги (бесплатно, одна на человека)
       { id: 12, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 0, oldPrice: null, stock: null },
       { id: 13, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 0, oldPrice: null, stock: null },
-      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null, stock: null }
+      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null, stock: null },
+
+      // Бронь — Catswill (15 BYN, 50 mg, по 1 шт.)
+      { id: 17, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Хайповый энергетик с черникой", price: 15, oldPrice: null, stock: 1 },
+      { id: 18, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Вишнёвый ледяной спрайт", price: 15, oldPrice: null, stock: 1 },
+      { id: 19, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Киви лёд кислинка", price: 15, oldPrice: null, stock: 1 },
+      { id: 20, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Клубнично-арбузная хубба-бубба", price: 15, oldPrice: null, stock: 1 },
+      { id: 21, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Фанта с голубой малиной", price: 15, oldPrice: null, stock: 1 },
+      { id: 22, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Морозный чёрный виноград", price: 15, oldPrice: null, stock: 1 },
+      { id: 23, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Яблочная холодная фанта", price: 15, oldPrice: null, stock: 1 },
+      { id: 24, category: "Бронь", img: IMG_CATSWILL_SOUR, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Кислое земляничное мохито", price: 15, oldPrice: null, stock: 1 },
+      { id: 25, category: "Бронь", img: IMG_CATSWILL_SOUR, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Кислый скитлс виноград ежевика", price: 15, oldPrice: null, stock: 1 },
+
+      // Бронь — Hotspot Fuel (16 BYN, 50 mg, по 1 шт.)
+      { id: 26, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Ананас Кокос", price: 16, oldPrice: null, stock: 1 },
+      { id: 27, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Яблоко Груша", price: 16, oldPrice: null, stock: 1 },
+      { id: 28, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Смородина Мята", price: 16, oldPrice: null, stock: 1 },
+      { id: 29, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Киви Банан", price: 16, oldPrice: null, stock: 1 },
+      { id: 30, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Личи Лайм", price: 16, oldPrice: null, stock: 1 },
+      { id: 31, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Манго Персик", price: 16, oldPrice: null, stock: 1 },
+      { id: 32, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Дыня Черника", price: 16, oldPrice: null, stock: 1 },
+      { id: 33, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Кислые Лесные Ягоды", price: 16, oldPrice: null, stock: 1 },
+      { id: 34, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Зелёная Мята Персик Кактус", price: 16, oldPrice: null, stock: 1 }
     ];
+
+    // ================= ЛОГИКА =================
+    let currentCategory = "Премиум";
+    let activeTab = "catalog";
+    let isCartOpen = false;
+    let deliveryCode = "delivery";
+    let paymentCode = "cash";
+    let paymentMethod = "Наличкой";
+    let appliedPromo = "";
+    let neighborCount = 0;
+    const cart = new Map();
 
     function applyStocksMap(stocksMap) {
       if (!stocksMap) return;
       PRODUCTS.forEach(p => {
         if (p.stock !== null && typeof stocksMap[String(p.id)] === "number") {
           p.stock = stocksMap[String(p.id)];
-          if (p.stock <= 0) cart.delete(p.id);
+          if (p.stock <= 0) {
+            cart.delete(p.id);
+          } else if (cart.has(p.id) && cart.get(p.id) > p.stock) {
+            cart.set(p.id, p.stock);
+          }
         }
       });
     }
@@ -1181,18 +1354,6 @@
         }
       } catch (e) {}
     }
-
-    // ================= ЛОГИКА =================
-    let currentCategory = "Премиум";
-    let activeTab = "catalog";
-    let isCartOpen = false;
-    let deliveryCode = "delivery";
-    let deliveryMethod = "Доставка (обговаривается с менеджером)";
-    let paymentCode = "cash";
-    let paymentMethod = "Наличкой";
-    let appliedPromo = "";
-    let neighborCount = 0;
-    const cart = new Set();
 
     loadSavedStocks();
 
@@ -1242,19 +1403,56 @@
       renderCartSummary();
     }
 
-    function selectDelivery(code, label, btn) {
-      haptic();
-      deliveryCode = code;
-      deliveryMethod = label;
-      document.querySelectorAll(".delivery-btn").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
+    function getCartFlags() {
+      let hasBron = false;
+      let hasRegular = false;
+      cart.forEach((qty, id) => {
+        if (qty <= 0) return;
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) return;
+        if (isBronProduct(p)) hasBron = true;
+        else hasRegular = true;
+      });
+      return { hasBron, hasRegular, onlyBron: hasBron && !hasRegular, isMixed: hasBron && hasRegular };
+    }
 
+    function updateCartDynamicTexts() {
+      const { onlyBron, isMixed } = getCartFlags();
+      const delSub = document.getElementById("delivery-sub-text");
+      const pickSub = document.getElementById("pickup-sub-text");
+      const mixedNote = document.getElementById("bron-mixed-note");
       const commentInput = document.getElementById("comment");
-      if (commentInput) {
-        commentInput.placeholder = code === "delivery"
+      const commentHelper = document.getElementById("comment-helper");
+
+      if (onlyBron) {
+        delSub.textContent = "доставим, когда будет в наличии";
+        pickSub.textContent = "забрать, когда будет в наличии";
+        mixedNote.classList.remove("show");
+        commentInput.placeholder = "Когда удобно забрать, как появится в наличии?";
+        commentHelper.textContent = "Напишем в ЛС, когда будет в наличии";
+      } else if (isMixed) {
+        delSub.textContent = "обговаривается с менеджером";
+        pickSub.textContent = "забрать самому";
+        mixedNote.classList.add("show");
+        commentInput.placeholder = "Куда отдать наличие и когда бронь?";
+        commentHelper.textContent = "Детали уточним с менеджером";
+      } else {
+        delSub.textContent = "обговаривается с менеджером";
+        pickSub.textContent = "забрать самому";
+        mixedNote.classList.remove("show");
+        commentInput.placeholder = deliveryCode === "delivery"
           ? "Куда доставить и во сколько?"
           : "Когда удобно забрать заказ?";
+        commentHelper.textContent = "Детали уточним с менеджером";
       }
+    }
+
+    function selectDelivery(code, btn) {
+      haptic();
+      deliveryCode = code;
+      document.querySelectorAll(".delivery-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      updateCartDynamicTexts();
       renderCartSummary();
     }
 
@@ -1277,11 +1475,8 @@
 
     function toggleCart() {
       haptic();
-      if (isCartOpen) {
-        closeCart();
-      } else {
-        openCart();
-      }
+      if (isCartOpen) closeCart();
+      else openCart();
     }
 
     function goToTab(tabName) {
@@ -1297,20 +1492,14 @@
 
     function openChannel() {
       haptic();
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(CHANNEL_URL);
-      } else {
-        window.open(CHANNEL_URL, "_blank");
-      }
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(CHANNEL_URL);
+      else window.open(CHANNEL_URL, "_blank");
     }
 
     function openManager() {
       haptic();
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(MANAGER_URL);
-      } else {
-        window.open(MANAGER_URL, "_blank");
-      }
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(MANAGER_URL);
+      else window.open(MANAGER_URL, "_blank");
     }
 
     function renderCategories() {
@@ -1318,7 +1507,7 @@
       el.innerHTML = "";
       CATEGORIES.forEach(cat => {
         const btn = document.createElement("button");
-        btn.className = "cat-btn" + (cat.id === currentCategory ? " active" : "");
+        btn.className = "cat-btn" + (cat.wide ? " wide" : "") + (cat.id === currentCategory ? " active" : "");
         btn.textContent = cat.label;
         btn.onclick = () => {
           haptic();
@@ -1339,6 +1528,13 @@
         note.className = "service-limit-note";
         note.innerHTML = "🎁 <b>Бесплатно</b> • Одна на человека";
         el.appendChild(note);
+      } else if (currentCategory === "Бронь" || currentCategory === "Картриджи") {
+        const note = document.createElement("div");
+        note.className = "bron-limit-note";
+        note.textContent = currentCategory === "Картриджи"
+          ? "⏳ Картриджи пока только в бронь — напишем, когда будет в наличии"
+          : "⏳ Бронируй заранее — напишем, когда будет в наличии";
+        el.appendChild(note);
       }
 
       const filtered = PRODUCTS.filter(p => p.category === currentCategory && (p.stock === null || p.stock > 0));
@@ -1353,17 +1549,49 @@
       }
 
       filtered.forEach(p => {
-        const isAdded = cart.has(p.id);
+        const qty = cart.get(p.id) || 0;
+        const isAdded = qty > 0;
         const isFree = p.price === 0;
+        const isBron = isBronProduct(p);
         const hasSale = !isFree && p.oldPrice && p.oldPrice > p.price;
-        const showSingleStock = isAdded && !NO_STOCK_NOTE_CATEGORIES.has(p.category) && p.stock === 1;
+        const isMultiStock = p.stock !== null && p.stock > 1;
+
+        let stockNoteText = "";
+        if (isAdded && !NO_STOCK_NOTE_CATEGORIES.has(p.category) && p.stock !== null) {
+          const remaining = p.stock - qty;
+          if (p.stock === 1) {
+            stockNoteText = isBron ? "Доступна 1 шт." : "В наличии 1 шт.";
+          } else if (remaining === 1) {
+            stockNoteText = "Осталась 1 шт.";
+          } else if (remaining <= 0) {
+            stockNoteText = `Доступно ${p.stock} шт. (макс.)`;
+          } else {
+            stockNoteText = `Осталось ${remaining} шт.`;
+          }
+        }
+
+        let actionHtml = "";
+        if (!isAdded) {
+          actionHtml = `<button class="add-btn" onclick="changeQty(${p.id}, 1)">${isBron ? "+ В бронь" : "+ Купить"}</button>`;
+        } else if (isMultiStock) {
+          actionHtml = `
+            <div class="qty-stepper">
+              <button class="qty-btn" onclick="changeQty(${p.id}, -1)">−</button>
+              <span class="qty-val">${qty}</span>
+              <button class="qty-btn" onclick="changeQty(${p.id}, 1)" ${qty >= p.stock ? "disabled" : ""}>+</button>
+            </div>
+          `;
+        } else {
+          actionHtml = `<button class="add-btn added" onclick="removeItem(${p.id})">${isBron ? "✓ В брони" : "✓ В корзине"}</button>`;
+        }
+
         const card = document.createElement("div");
         card.className = "card" + (isAdded ? " in-cart" : "");
         card.innerHTML = `
           <img class="prod-img" src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
           <div class="info">
             <div class="tags-row">
-              <span class="tag">${p.tag}</span>
+              <span class="tag ${isBron ? "bron" : ""}">${p.tag}</span>
             </div>
             <div class="name ${p.flavor ? "" : "no-flavor"}">${p.name}</div>
             ${p.flavor ? `<div class="flavor">${p.flavor}</div>` : ""}
@@ -1376,10 +1604,8 @@
             </div>
           </div>
           <div class="card-action">
-            <button class="add-btn ${isAdded ? "added" : ""}" onclick="toggleItem(${p.id})">
-              ${isAdded ? "✓ В корзине" : "+ Купить"}
-            </button>
-            ${showSingleStock ? `<span class="stock-note">В наличии 1 шт.</span>` : ""}
+            ${actionHtml}
+            ${stockNoteText ? `<span class="stock-note">${stockNoteText}</span>` : ""}
           </div>
         `;
         el.appendChild(card);
@@ -1387,29 +1613,44 @@
       updateBadge();
     }
 
-    window.toggleItem = function(id) {
+    window.changeQty = function(id, delta) {
       haptic();
       const product = PRODUCTS.find(x => x.id === id);
       if (!product) return;
-      if (cart.has(id)) {
+
+      const currentQty = cart.get(id) || 0;
+      const nextQty = currentQty + delta;
+
+      if (nextQty <= 0) {
         cart.delete(id);
       } else {
-        if (product.stock !== null && product.stock <= 0) return;
+        if (product.stock !== null && nextQty > product.stock) return;
         if (product.category === "Услуги") {
           PRODUCTS.forEach(p => {
             if (p.category === "Услуги") cart.delete(p.id);
           });
+          cart.set(id, 1);
+        } else {
+          cart.set(id, nextQty);
         }
-        cart.add(id);
       }
+      renderCatalog();
+      renderCart();
+    };
+
+    window.removeItem = function(id) {
+      haptic();
+      cart.delete(id);
       renderCatalog();
       renderCart();
     };
 
     function updateBadge() {
       const badge = document.getElementById("cart-badge");
-      if (cart.size > 0) {
-        badge.textContent = cart.size;
+      let totalQty = 0;
+      cart.forEach(qty => { totalQty += qty; });
+      if (totalQty > 0) {
+        badge.textContent = totalQty;
         badge.classList.add("show");
       } else {
         badge.classList.remove("show");
@@ -1418,37 +1659,51 @@
 
     function getOrderData() {
       const items = [];
+      let totalCount = 0;
       let baseTotal = 0;
-      let eligibleCount = 0;
+      let regularEligibleCount = 0;
+      let bronCount = 0;
       let hasCartridge = false;
       let hasPremium = false;
-      let hasClassicOrBudget = false;
+      let hasClassicOrStrong = false;
       let liquidsBaseSum = 0;
       let liquidsCount = 0;
 
-      cart.forEach(id => {
+      cart.forEach((qty, id) => {
         const p = PRODUCTS.find(x => x.id === id);
-        if (p) {
-          items.push({ id: p.id, name: p.name, flavor: p.flavor, price: p.price, qty: 1 });
-          baseTotal += p.price;
-          if (!NO_FEE_CATEGORIES.has(p.category)) eligibleCount += 1;
+        if (p && qty > 0) {
+          const isBron = isBronProduct(p);
+          items.push({
+            id: p.id,
+            name: isBron ? `[БРОНЬ] ${p.name}` : p.name,
+            flavor: p.flavor,
+            price: p.price,
+            qty,
+            isBron
+          });
+          totalCount += qty;
+          baseTotal += p.price * qty;
+
+          if (isBron) {
+            bronCount += qty;
+          } else if (!NO_FEE_CATEGORIES.has(p.category)) {
+            regularEligibleCount += qty;
+          }
+
           if (p.category === "Картриджи") hasCartridge = true;
           if (p.category === "Премиум") hasPremium = true;
-          if (p.category === "Классика" || p.category === "Бюджет") hasClassicOrBudget = true;
+          if (p.category === "Классика" || p.category === "Крепкие") hasClassicOrStrong = true;
           if (LIQUID_CATEGORIES.has(p.category)) {
-            liquidsBaseSum += p.price;
-            liquidsCount += 1;
+            liquidsBaseSum += p.price * qty;
+            liquidsCount += qty;
           }
         }
       });
 
       let comboDiscount = 0;
       if (hasCartridge) {
-        if (hasPremium) {
-          comboDiscount = 2;
-        } else if (hasClassicOrBudget) {
-          comboDiscount = 1;
-        }
+        if (hasPremium) comboDiscount = 2;
+        else if (hasClassicOrStrong) comboDiscount = 1;
       }
 
       let neighborDiscount = 0;
@@ -1460,17 +1715,26 @@
       const promoApplied = Boolean(appliedPromo) && baseTotal > 0;
       const promoDiscount = promoApplied ? PROMO_DISCOUNT_AMOUNT : 0;
 
+      // Комиссии с учётом правил для Брони
       let fee = 0;
       if (paymentCode === "card") {
-        fee = eligibleCount > 0 ? 1 : 0;
-      } else if (paymentCode === "debt" || paymentCode === "debt_card") {
-        fee = eligibleCount;
+        fee = (regularEligibleCount > 0 || bronCount > 0) ? 1 : 0;
+      } else if (paymentCode === "debt") {
+        fee = regularEligibleCount;
+      } else if (paymentCode === "debt_card") {
+        fee = regularEligibleCount > 0 ? regularEligibleCount : (bronCount > 0 ? 1 : 0);
       }
+
+      const { onlyBron } = getCartFlags();
+      const deliveryLabel = deliveryCode === "delivery"
+        ? (onlyBron ? "Доставка (когда будет в наличии)" : "Доставка (обговаривается с менеджером)")
+        : (onlyBron ? "Самовывоз (когда будет в наличии)" : "Самовывоз (забрать самому)");
 
       const total = Math.max(0, +(baseTotal - comboDiscount - neighborDiscount - promoDiscount + fee).toFixed(2));
       const comment = document.getElementById("comment").value.trim() || "Без комментария";
       return {
         items,
+        totalCount,
         total,
         baseTotal: +baseTotal.toFixed(2),
         comboDiscount,
@@ -1479,8 +1743,7 @@
         promoCode: promoApplied ? appliedPromo : "",
         promoDiscount,
         fee,
-        eligibleCount,
-        delivery: deliveryMethod,
+        delivery: deliveryLabel,
         payment: paymentMethod,
         comment
       };
@@ -1497,9 +1760,9 @@
 
     function renderCartSummary() {
       if (cart.size === 0) return;
-      const { items, baseTotal, comboDiscount, neighborDiscount, promoDiscount, fee, total } = getOrderData();
+      const { totalCount, baseTotal, comboDiscount, neighborDiscount, promoDiscount, fee, total } = getOrderData();
       document.getElementById("cart-summary").innerHTML = `
-        <div class="summary-row"><span>Позиций в заказе</span><span>${items.length} шт.</span></div>
+        <div class="summary-row"><span>Позиций в заказе</span><span>${totalCount} шт.</span></div>
         <div class="summary-row"><span>Сумма товаров</span><span>${formatPrice(baseTotal)} BYN</span></div>
         ${deliveryCode === "delivery" ? `<div class="summary-row discount"><span>🚚 Доставка</span><span>Бесплатно</span></div>` : ""}
         ${comboDiscount > 0 ? `<div class="summary-row discount"><span>🎁 Комплект</span><span>−${formatPrice(comboDiscount)} BYN</span></div>` : ""}
@@ -1526,26 +1789,36 @@
 
       const listEl = document.getElementById("cart-list");
       listEl.innerHTML = "";
-      cart.forEach(id => {
+      cart.forEach((qty, id) => {
         const p = PRODUCTS.find(x => x.id === id);
         if (!p) return;
         const isFree = p.price === 0;
+        const isBron = isBronProduct(p);
+        const isMultiStock = p.stock !== null && p.stock > 1;
         const row = document.createElement("div");
         row.className = "cart-item";
         row.innerHTML = `
           <img class="cart-item-img" src="${p.img}" alt="${p.name}" onerror="this.style.display='none'">
           <div class="cart-item-info">
-            <div class="cart-item-name">${p.name}</div>
+            <div class="cart-item-name">${isBron ? `<span class="bron-inline-badge">БРОНЬ</span>` : ""}${p.name}</div>
             ${p.flavor ? `<div class="cart-item-flavor">${p.flavor}</div>` : ""}
           </div>
           <div class="cart-item-right">
-            <span class="cart-item-price ${isFree ? "free" : ""}">${isFree ? "Бесплатно" : formatPrice(p.price) + " BYN"}</span>
-            <button class="remove-btn" onclick="toggleItem(${p.id})">✕</button>
+            ${isMultiStock ? `
+              <div class="cart-mini-stepper">
+                <button class="cart-mini-btn" onclick="changeQty(${p.id}, -1)">−</button>
+                <span class="cart-mini-qty">${qty}</span>
+                <button class="cart-mini-btn" onclick="changeQty(${p.id}, 1)" ${qty >= p.stock ? "disabled" : ""}>+</button>
+              </div>
+            ` : ""}
+            <span class="cart-item-price ${isFree ? "free" : ""}">${isFree ? "Бесплатно" : formatPrice(p.price * qty) + " BYN"}</span>
+            <button class="remove-btn" onclick="removeItem(${p.id})">✕</button>
           </div>
         `;
         listEl.appendChild(row);
       });
 
+      updateCartDynamicTexts();
       renderCartSummary();
     }
 
@@ -1565,8 +1838,9 @@
 
       const itemsText = order.items.map((item, i) => {
         const flavor = item.flavor ? ` (${item.flavor})` : "";
-        const price = item.price === 0 ? "Бесплатно" : `${formatPrice(item.price)} BYN`;
-        return `${i + 1}. ${item.name}${flavor} — <b>${price}</b>`;
+        const qtyLabel = item.qty > 1 ? ` × ${item.qty} шт.` : "";
+        const price = item.price === 0 ? "Бесплатно" : `${formatPrice(item.price * item.qty)} BYN`;
+        return `${i + 1}. ${item.name}${flavor}${qtyLabel} — <b>${price}</b>`;
       }).join("\n");
 
       const discounts = [];
