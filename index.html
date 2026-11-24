@@ -31,14 +31,59 @@
     }
 
     body {
-      background: var(--bg);
+      background-color: var(--bg);
       background-image:
-        radial-gradient(circle at 10% 0%, rgba(139, 92, 246, 0.14), transparent 40%),
-        radial-gradient(circle at 90% 15%, rgba(249, 115, 22, 0.08), transparent 35%);
+        radial-gradient(circle at 12% 0%, rgba(139, 92, 246, 0.22), transparent 45%),
+        radial-gradient(circle at 90% 18%, rgba(99, 102, 241, 0.12), transparent 40%);
       color: var(--text);
       padding: 16px 16px 100px;
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background-color 0.35s ease;
+    }
+
+    /* Фиолетовые оттенки фона под каждую категорию */
+    body.theme-premium {
+      background-color: #0b0a12;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(139, 92, 246, 0.24), transparent 46%),
+        radial-gradient(circle at 88% 20%, rgba(99, 102, 241, 0.14), transparent 42%);
+    }
+    body.theme-classic {
+      background-color: #0d0a14;
+      background-image:
+        radial-gradient(circle at 15% 0%, rgba(168, 85, 247, 0.22), transparent 46%),
+        radial-gradient(circle at 85% 22%, rgba(139, 92, 246, 0.12), transparent 42%);
+    }
+    body.theme-strong {
+      background-color: #110914;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(192, 38, 211, 0.22), transparent 46%),
+        radial-gradient(circle at 88% 18%, rgba(126, 34, 206, 0.16), transparent 42%);
+    }
+    body.theme-cartridges {
+      background-color: #090b14;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(99, 102, 241, 0.24), transparent 46%),
+        radial-gradient(circle at 88% 20%, rgba(124, 58, 237, 0.14), transparent 42%);
+    }
+    body.theme-devices {
+      background-color: #0a0b15;
+      background-image:
+        radial-gradient(circle at 15% 0%, rgba(124, 58, 237, 0.22), transparent 46%),
+        radial-gradient(circle at 85% 20%, rgba(79, 70, 229, 0.16), transparent 42%);
+    }
+    body.theme-services {
+      background-color: #0e0a14;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(192, 132, 252, 0.20), transparent 46%),
+        radial-gradient(circle at 88% 20%, rgba(217, 70, 239, 0.12), transparent 42%);
+    }
+    body.theme-bron {
+      background-color: #100b13;
+      background-image:
+        radial-gradient(circle at 12% 0%, rgba(147, 51, 234, 0.22), transparent 46%),
+        radial-gradient(circle at 88% 18%, rgba(249, 115, 22, 0.13), transparent 42%);
     }
 
     /* Компактная шапка с затемнённым фоном */
@@ -113,7 +158,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Сетка категорий 2x3 + широкая Бронь */
+    /* Сетка категорий 2x3 + широкая кликабельная Бронь */
     .categories {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -135,11 +180,12 @@
       cursor: pointer;
       transition: all 0.18s ease;
     }
+    .cat-btn:active {
+      transform: scale(0.97);
+    }
     .cat-btn.wide {
       grid-column: 1 / -1;
-      padding: 9px 10px;
-      border-color: rgba(251, 146, 60, 0.35);
-      color: #fed7aa;
+      padding: 8px 10px;
     }
     .cat-btn.active {
       background: var(--accent);
@@ -882,7 +928,7 @@
     .cart-badge.show { display: flex; }
   </style>
 </head>
-<body>
+<body class="theme-premium">
 
   <!-- Компактная шапка -->
   <div class="header">
@@ -903,7 +949,7 @@
         </span>
       </summary>
       <div class="cart-guide-body">
-        1. Выбери товары и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для картриджей можно выбрать нужное количество).<br>
+        1. Выбери товары и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для товаров в наличии от 2 шт. можно выбрать нужное количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана.<br>
         3. Следуй инструкции там, чтобы завершить заказ.
       </div>
@@ -922,8 +968,8 @@
         Как только добьём <b>70 подписчиков</b> в Telegram-канале, за каждую купленную позицию выдаём номерок участника. Выберем <b>3 победителей</b>:
       </div>
       <ul class="promo-list">
-        <li>🥇 <b>1 место</b> — любая жидкость на выбор + жидкость The Chillers или My yummy</li>
-        <li>🥈 <b>2 место</b> — картридж на выбор + жидкость The Chillers или My yummy</li>
+        <li>🥇 <b>1 место</b> — любая жидкость на выбор</li>
+        <li>🥈 <b>2 место</b> — картридж на выбор</li>
         <li>🥉 <b>3 место</b> — жидкость The Chillers или My yummy на выбор</li>
       </ul>
     </div>
@@ -1066,7 +1112,7 @@
         </span>
       </summary>
       <div class="accordion-body">
-        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для картриджей можно выбрать количество).<br>
+        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для товаров от 2 шт. можно выбрать количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана и проверь выбранные позиции.<br>
         3. Выбери <b>способ получения</b> (бесплатная доставка или самовывоз) и <b>способ оплаты</b>.<br>
         4. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
@@ -1209,13 +1255,13 @@
     }
 
     // ================= НАСТРОЙКИ =================
-    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbz1JcEUOahFdlil-yzOcsAxJ5N6THReu74dIYDISXsmWOrjCSybrhtsuGSQ6mX4MooaBw/exec";
+    const SHEET_API_URL = "https://script.google.com/macros/s/AKfycbw0mdd_wu7B8hzs4-zm0mjBJ2kLGETDuzLhjauhOpjwRXGLr-gGAmDQrRi2raiQJ5al/exec";
 
     const BOT_TOKEN = "9051670683:AAEgc3aap1jii7BrlYyXOa5ZRePFfhszMUw";
     const ORDERS_CHANNEL_ID = "-1004420885371";
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
     const MANAGER_URL = "https://t.me/makario08";
-    const STOCK_STORAGE_KEY = "dp_stocks_v4";
+    const STOCK_STORAGE_KEY = "dp_stocks_v6";
 
     const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Крепкие", "Бронь"]);
     const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
@@ -1226,13 +1272,13 @@
     const MIN_LIQUID_PRICE = 2;
 
     const CATEGORIES = [
-      { id: "Премиум", label: "💎 Премиум" },
-      { id: "Классика", label: "⭐ Классика" },
-      { id: "Крепкие", label: "💀 Крепкие" },
-      { id: "Картриджи", label: "🔋 Картриджи" },
-      { id: "Девайсы", label: "💨 Девайсы" },
-      { id: "Услуги", label: "🎁 Услуги" },
-      { id: "Бронь", label: "⏳ Бронь", wide: true }
+      { id: "Премиум", label: "💎 Премиум", theme: "theme-premium" },
+      { id: "Классика", label: "⭐ Классика", theme: "theme-classic" },
+      { id: "Крепкие", label: "💀 Крепкие", theme: "theme-strong" },
+      { id: "Картриджи", label: "🔋 Картриджи", theme: "theme-cartridges" },
+      { id: "Девайсы", label: "💨 Девайсы", theme: "theme-devices" },
+      { id: "Услуги", label: "🎁 Услуги", theme: "theme-services" },
+      { id: "Бронь", label: "⏳ Бронь", wide: true, theme: "theme-bron" }
     ];
 
     const IMG_HOTSPOT = "https://i.postimg.cc/VkZyBHnc/IMG-0142.jpg";
@@ -1251,10 +1297,10 @@
       { id: 3, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Яблоко киви клубника", price: 17, oldPrice: 20, stock: 1 },
       { id: 4, category: "Премиум", img: "https://i.postimg.cc/fbFF3r6H/IMG-9771.jpg", tag: "Премиум • 50 mg", name: "ELFLIQ", flavor: "Красная слива нектарин", price: 17, oldPrice: 20, stock: 1 },
 
-      // Классика (stock: 1)
+      // Классика
       { id: 6, category: "Классика", img: "https://i.postimg.cc/NfqcC5PY/IMG-9745.jpg", tag: "Классика • 100 mg", name: "САМОУБИЙЦА V2 Danger", flavor: "Вишневый холс", price: 15, oldPrice: 17, stock: 1 },
       { id: 7, category: "Классика", img: "https://i.postimg.cc/4Nkg2mFs/IMG-9747.jpg", tag: "Классика • 20 mg", name: "PODONKI MALAYSIAN ARCADE", flavor: "Цитрусовый микс", price: 15, oldPrice: 17, stock: 1 },
-      { id: 8, category: "Классика", img: "https://i.postimg.cc/RV5BpNbv/IMG-9752.jpg", tag: "Классика • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10, stock: 1 },
+      { id: 8, category: "Классика", img: "https://i.postimg.cc/RV5BpNbv/IMG-9752.jpg", tag: "Классика • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10, stock: 2 },
       { id: 9, category: "Классика", img: "https://i.postimg.cc/WbLvYhfN/IMG-9752.jpg", tag: "Классика • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10, stock: 1 },
 
       // Крепкие (stock: 1)
@@ -1306,6 +1352,18 @@
     let appliedPromo = "";
     let neighborCount = 0;
     const cart = new Map();
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function applyCategoryTheme() {
+      const cat = CATEGORIES.find(c => c.id === currentCategory);
+      document.body.className = cat && cat.theme ? cat.theme : "theme-premium";
+    }
 
     function applyStocksMap(stocksMap) {
       if (!stocksMap) return;
@@ -1512,6 +1570,7 @@
         btn.onclick = () => {
           haptic();
           currentCategory = cat.id;
+          applyCategoryTheme();
           renderCategories();
           renderCatalog();
         };
@@ -1822,6 +1881,19 @@
       renderCartSummary();
     }
 
+    async function sendDirectTelegram(message) {
+      const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: ORDERS_CHANNEL_ID,
+          text: message,
+          parse_mode: "HTML"
+        })
+      });
+      if (!res.ok) throw new Error("Telegram API error");
+    }
+
     async function submitOrder() {
       haptic();
       const order = getOrderData();
@@ -1837,64 +1909,70 @@
       const tgId = user ? user.id : "—";
 
       const itemsText = order.items.map((item, i) => {
-        const flavor = item.flavor ? ` (${item.flavor})` : "";
+        const flavor = item.flavor ? ` (${escapeHtml(item.flavor)})` : "";
         const qtyLabel = item.qty > 1 ? ` × ${item.qty} шт.` : "";
         const price = item.price === 0 ? "Бесплатно" : `${formatPrice(item.price * item.qty)} BYN`;
-        return `${i + 1}. ${item.name}${flavor}${qtyLabel} — <b>${price}</b>`;
+        return `${i + 1}. ${escapeHtml(item.name)}${flavor}${qtyLabel} — <b>${price}</b>`;
       }).join("\n");
 
       const discounts = [];
       if (order.comboDiscount > 0) discounts.push(`🎁 Комплект: −${formatPrice(order.comboDiscount)} BYN`);
       if (order.neighborDiscount > 0) discounts.push(`👥 Соседи: −${formatPrice(order.neighborDiscount)} BYN`);
-      if (order.promoDiscount > 0) discounts.push(`🏷️ Промокод (${order.promoCode}): −${formatPrice(order.promoDiscount)} BYN`);
+      if (order.promoDiscount > 0) discounts.push(`🏷️ Промокод (${escapeHtml(order.promoCode)}): −${formatPrice(order.promoDiscount)} BYN`);
       const discountsText = discounts.length > 0 ? discounts.join("\n") : "Нет";
+
+      const { hasBron } = getCartFlags();
+      const statusText = hasBron ? "🕐 Бронь" : "🕐 В обработке";
 
       const message = [
         `🛍 <b>НОВЫЙ ЗАКАЗ • DistrictPuff</b>`,
         ``,
-        `👤 <b>Клиент:</b> ${tgName} (${tgUsername})`,
-        `🆔 <b>ID:</b> <code>${tgId}</code>`,
-        `💬 <b>Комментарий:</b> ${order.comment}`,
+        `👤 <b>Клиент:</b> ${escapeHtml(tgName)} (${escapeHtml(tgUsername)})`,
+        `🆔 <b>ID:</b> <code>${escapeHtml(tgId)}</code>`,
+        `💬 <b>Комментарий:</b> ${escapeHtml(order.comment)}`,
         ``,
         `📦 <b>Товары:</b>`,
         itemsText,
         ``,
-        `🚚 <b>Получение:</b> ${order.delivery}`,
-        `💳 <b>Оплата:</b> ${order.payment}`,
+        `🚚 <b>Получение:</b> ${escapeHtml(order.delivery)}`,
+        `💳 <b>Оплата:</b> ${escapeHtml(order.payment)}`,
         `💰 <b>Сумма товаров:</b> ${formatPrice(order.baseTotal)} BYN`,
         `📉 <b>Скидки:</b>\n${discountsText}`,
         order.fee > 0 ? `➕ <b>Комиссия:</b> +${formatPrice(order.fee)} BYN` : null,
         ``,
-        `🔥 <b>ИТОГО К ОПЛАТЕ: ${formatPrice(order.total)} BYN</b>`
+        `🔥 <b>ИТОГО К ОПЛАТЕ: ${formatPrice(order.total)} BYN</b>`,
+        ``,
+        `📌 <b>Статус:</b> ${statusText}`,
+        `<i>(✅ отдан • 🕐 в обработке / бронь • ❌ отменён)</i>`
       ].filter(line => line !== null).join("\n");
 
       try {
-        if (SHEET_API_URL) {
-          const res = await fetch(SHEET_API_URL, {
-            method: "POST",
-            redirect: "follow",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({
-              client: `${tgName} (${tgUsername})`,
-              order,
-              message
-            })
-          });
-          const data = await res.json();
-          if (!data || !data.ok) throw new Error(data && data.error ? data.error : "Sheet API error");
-          if (data.stocks) applyStocksMap(data.stocks);
-        } else {
-          const res = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: ORDERS_CHANNEL_ID,
-              text: message,
-              parse_mode: "HTML"
-            })
-          });
-          if (!res.ok) throw new Error("Telegram API error");
+        let sentViaSheet = false;
 
+        if (SHEET_API_URL) {
+          try {
+            const res = await fetch(SHEET_API_URL, {
+              method: "POST",
+              redirect: "follow",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: JSON.stringify({
+                client: `${tgName} (${tgUsername})`,
+                order,
+                message
+              })
+            });
+            const data = await res.json();
+            if (data && data.ok) {
+              sentViaSheet = true;
+              if (data.stocks) applyStocksMap(data.stocks);
+            }
+          } catch (sheetErr) {
+            sentViaSheet = false;
+          }
+        }
+
+        if (!sentViaSheet) {
+          await sendDirectTelegram(message);
           order.items.forEach(item => {
             const p = PRODUCTS.find(x => x.id === item.id);
             if (p && p.stock !== null) {
@@ -1930,6 +2008,7 @@
       }
     }
 
+    applyCategoryTheme();
     renderCategories();
     renderCatalog();
     renderCart();
