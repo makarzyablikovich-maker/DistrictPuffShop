@@ -139,17 +139,6 @@
     }
     .service-limit-note b { color: var(--green); }
 
-    .bron-limit-note {
-      background: rgba(251, 146, 60, 0.12);
-      border: 1px solid rgba(251, 146, 60, 0.35);
-      color: #fed7aa;
-      border-radius: 12px;
-      padding: 8px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-    }
-
     /* Вкладки контента */
     .tab-content { display: none; animation: fadeIn 0.2s ease; }
     .tab-content.active { display: block; }
@@ -949,7 +938,7 @@
         </span>
       </summary>
       <div class="cart-guide-body">
-        1. Выбери товары и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для товаров в наличии от 2 шт. можно выбрать нужное количество).<br>
+        1. Выбери товары и нажми <b>«+ Купить»</b> (для товаров от 2 шт. можно выбрать нужное количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана.<br>
         3. Следуй инструкции там, чтобы завершить заказ.
       </div>
@@ -1077,25 +1066,7 @@
         2. <b>На карту</b> — +1 BYN к заказу.<br>
         3. <b>В долг (до недели)</b> — +1 BYN за позиц.<br>
         4. <b>В долг + на карту</b> — +1 BYN за позиц.
-        <div class="ps-note">Комиссии не распространяются на под-системы и услуги. Для товаров из «Брони» доплаты за долг нет (на карту +1 BYN).</div>
-      </div>
-    </details>
-
-    <details class="accordion-card">
-      <summary>
-        <div class="acc-left">
-          <div class="promo-title" style="font-size: 15px; margin-bottom: 0;">⏳ Бронь и В долг — в чём разница?</div>
-          <div class="acc-sub">Предзаказ vs покупка сейчас</div>
-        </div>
-        <span class="acc-toggle">
-          <span class="acc-label-closed">Подробнее</span>
-          <span class="acc-label-open">Скрыть</span>
-          <span class="acc-arrow">▾</span>
-        </span>
-      </summary>
-      <div class="accordion-body">
-        • <b>Бронь</b> — закрепляешь товар заранее, забираешь и платишь, <b>когда будет в наличии</b> (без доплаты за долг; на карту +1 BYN).<br><br>
-        • <b>В долг</b> — забираешь из наличия <b>сейчас</b>, платишь позже (до недели, +1 BYN за позицию).
+        <div class="ps-note">Комиссии не распространяются на под-системы и услуги.</div>
       </div>
     </details>
 
@@ -1112,7 +1083,7 @@
         </span>
       </summary>
       <div class="accordion-body">
-        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b> или <b>«+ В бронь»</b> (для товаров от 2 шт. можно выбрать количество).<br>
+        1. Выбери товары в каталоге и нажми <b>«+ Купить»</b> (для товаров от 2 шт. можно выбрать количество).<br>
         2. Перейди во вкладку <b>«Корзина»</b> внизу экрана и проверь выбранные позиции.<br>
         3. Выбери <b>способ получения</b> (бесплатная доставка или самовывоз) и <b>способ оплаты</b>.<br>
         4. В комментарии укажи, <b>куда и во сколько доставить</b> (или когда удобно забрать).<br>
@@ -1145,7 +1116,6 @@
         4. Если есть промокод — введи его в поле промокода и нажми <b>«Применить»</b>.<br>
         5. Нажми <b>«Оформить заказ»</b> и <b>подожди пару секунд</b>, пока не появится надпись, что заказ оформлен — заявка улетит менеджеру, и он напишет тебе в ЛС.
         <div class="ps-note">
-          Бронь — предзаказ до появления в наличии (без доплаты за долг). В долг — из наличия сейчас, оплата позже.<br>
           Менеджер проверяет право на промокод — при необходимости он может быть аннулирован.
         </div>
       </div>
@@ -1261,7 +1231,7 @@
     const ORDERS_CHANNEL_ID = "-1004420885371";
     const CHANNEL_URL = "https://t.me/+I_mYvWqEYB9lYzli";
     const MANAGER_URL = "https://t.me/makario08";
-    const STOCK_STORAGE_KEY = "dp_stocks_v6";
+    const STOCK_STORAGE_KEY = "dp_stocks_v7";
 
     const LIQUID_CATEGORIES = new Set(["Премиум", "Классика", "Крепкие", "Бронь"]);
     const NO_FEE_CATEGORIES = new Set(["Девайсы", "Услуги"]);
@@ -1287,7 +1257,7 @@
     const IMG_CATSWILL_CLASSIC = "https://i.postimg.cc/t4v0tmW7/IMG-0145.jpg";
 
     function isBronProduct(p) {
-      return p.category === "Бронь" || p.category === "Картриджи";
+      return p.category === "Бронь";
     }
 
     const PRODUCTS = [
@@ -1302,14 +1272,33 @@
       { id: 7, category: "Классика", img: "https://i.postimg.cc/4Nkg2mFs/IMG-9747.jpg", tag: "Классика • 20 mg", name: "PODONKI MALAYSIAN ARCADE", flavor: "Цитрусовый микс", price: 15, oldPrice: 17, stock: 1 },
       { id: 8, category: "Классика", img: "https://i.postimg.cc/RV5BpNbv/IMG-9752.jpg", tag: "Классика • 30 mg", name: "The Chillers", flavor: "Клюква ежевика кулер", price: 7, oldPrice: 10, stock: 2 },
       { id: 9, category: "Классика", img: "https://i.postimg.cc/WbLvYhfN/IMG-9752.jpg", tag: "Классика • 30 mg", name: "My yummy", flavor: "Ягодный бриз", price: 7, oldPrice: 10, stock: 1 },
+      { id: 17, category: "Классика", img: IMG_CATSWILL_CLASSIC, tag: "Классика • 50 mg", name: "Catswill", flavor: "Хайповый энергетик с черникой", price: 15, oldPrice: null, stock: 1 },
+      { id: 18, category: "Классика", img: IMG_CATSWILL_CLASSIC, tag: "Классика • 50 mg", name: "Catswill", flavor: "Вишнёвый ледяной спрайт", price: 15, oldPrice: null, stock: 1 },
+      { id: 19, category: "Классика", img: IMG_CATSWILL_CLASSIC, tag: "Классика • 50 mg", name: "Catswill", flavor: "Киви лёд кислинка", price: 15, oldPrice: null, stock: 1 },
+      { id: 20, category: "Классика", img: IMG_CATSWILL_CLASSIC, tag: "Классика • 50 mg", name: "Catswill", flavor: "Клубнично-арбузная хубба-бубба", price: 15, oldPrice: null, stock: 1 },
+      { id: 21, category: "Классика", img: IMG_CATSWILL_EXTRA, tag: "Классика • 50 mg", name: "Catswill", flavor: "Фанта с голубой малиной", price: 15, oldPrice: null, stock: 1 },
+      { id: 22, category: "Классика", img: IMG_CATSWILL_EXTRA, tag: "Классика • 50 mg", name: "Catswill", flavor: "Морозный чёрный виноград", price: 15, oldPrice: null, stock: 1 },
+      { id: 23, category: "Классика", img: IMG_CATSWILL_EXTRA, tag: "Классика • 50 mg", name: "Catswill", flavor: "Яблочная холодная фанта", price: 15, oldPrice: null, stock: 1 },
+      { id: 24, category: "Классика", img: IMG_CATSWILL_SOUR, tag: "Классика • 50 mg", name: "Catswill", flavor: "Кислое земляничное мохито", price: 15, oldPrice: null, stock: 1 },
+      { id: 25, category: "Классика", img: IMG_CATSWILL_SOUR, tag: "Классика • 50 mg", name: "Catswill", flavor: "Кислый скитлс виноград ежевика", price: 15, oldPrice: null, stock: 1 },
+      { id: 35, category: "Классика", img: IMG_CATSWILL_SOUR, tag: "Классика • 50 mg", name: "Catswill", flavor: "Фанта апельсин с кислой малиной", price: 15, oldPrice: null, stock: 2 },
 
-      // Крепкие (stock: 1)
+      // Крепкие
       { id: 5, category: "Крепкие", img: "https://i.postimg.cc/sDdrHv0r/IMG-9741.jpg", tag: "Крепкие • 70 mg", name: "ISTERIKA САМОУБИЙЦА", flavor: "Клубника киви мята", price: 15, oldPrice: 17, stock: 1 },
+      { id: 26, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Ананас Кокос", price: 16, oldPrice: null, stock: 1 },
+      { id: 27, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Яблоко Груша", price: 16, oldPrice: null, stock: 1 },
+      { id: 28, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Смородина Мята", price: 16, oldPrice: null, stock: 1 },
+      { id: 29, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Киви Банан", price: 16, oldPrice: null, stock: 1 },
+      { id: 30, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Личи Лайм", price: 16, oldPrice: null, stock: 1 },
+      { id: 31, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Манго Персик", price: 16, oldPrice: null, stock: 1 },
+      { id: 32, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Дыня Черника", price: 16, oldPrice: null, stock: 1 },
+      { id: 33, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Кислые Лесные Ягоды", price: 16, oldPrice: null, stock: 1 },
+      { id: 34, category: "Крепкие", img: IMG_HOTSPOT, tag: "Крепкие • 50 mg", name: "Hotspot Fuel", flavor: "Зелёная Мята Персик Кактус", price: 16, oldPrice: null, stock: 1 },
 
-      // Картриджи (своя плашка, пока только в бронь: 4, 4, 2)
-      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Бронь • Картридж", name: "XROS 0.6Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
-      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Бронь • Картридж", name: "XROS 0.4Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
-      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Бронь • Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 14, oldPrice: 15, stock: 2 },
+      // Картриджи (в наличии, обычная покупка)
+      { id: 10, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.6Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
+      { id: 15, category: "Картриджи", img: "https://i.postimg.cc/Kj82m94N/IMG-9830.jpg", tag: "Картридж", name: "XROS 0.4Ω", flavor: "", price: 14, oldPrice: 15, stock: 4 },
+      { id: 16, category: "Картриджи", img: "https://i.postimg.cc/VN09V1Rn/IMG-9839.jpg", tag: "Картридж", name: "V.THRU 0.7Ω", flavor: "", price: 14, oldPrice: 15, stock: 2 },
 
       // Девайсы (stock: 1)
       { id: 11, category: "Девайсы", img: "https://i.postimg.cc/4y2Tyzhh/IMG-9831.jpg", tag: "POD-системы", name: "Aspire Dabbler Nice POD", flavor: "", price: 10, oldPrice: 15, stock: 1 },
@@ -1317,30 +1306,7 @@
       // Услуги (бесплатно, одна на человека)
       { id: 12, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Гранатовый мармелад", price: 0, oldPrice: null, stock: null },
       { id: 13, category: "Услуги", img: "https://i.postimg.cc/brVjrQ2n/IMG-9835.jpg", tag: "Услуги", name: "Залить жидкость R&M", flavor: "Ежевика малина", price: 0, oldPrice: null, stock: null },
-      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null, stock: null },
-
-      // Бронь — Catswill (15 BYN, 50 mg, по 1 шт.)
-      { id: 17, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Хайповый энергетик с черникой", price: 15, oldPrice: null, stock: 1 },
-      { id: 18, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Вишнёвый ледяной спрайт", price: 15, oldPrice: null, stock: 1 },
-      { id: 19, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Киви лёд кислинка", price: 15, oldPrice: null, stock: 1 },
-      { id: 20, category: "Бронь", img: IMG_CATSWILL_CLASSIC, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Клубнично-арбузная хубба-бубба", price: 15, oldPrice: null, stock: 1 },
-      { id: 21, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Фанта с голубой малиной", price: 15, oldPrice: null, stock: 1 },
-      { id: 22, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Морозный чёрный виноград", price: 15, oldPrice: null, stock: 1 },
-      { id: 23, category: "Бронь", img: IMG_CATSWILL_EXTRA, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Яблочная холодная фанта", price: 15, oldPrice: null, stock: 1 },
-      { id: 24, category: "Бронь", img: IMG_CATSWILL_SOUR, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Кислое земляничное мохито", price: 15, oldPrice: null, stock: 1 },
-      { id: 25, category: "Бронь", img: IMG_CATSWILL_SOUR, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Кислый скитлс виноград ежевика", price: 15, oldPrice: null, stock: 1 },
-      { id: 35, category: "Бронь", img: IMG_CATSWILL_SOUR, tag: "Бронь • 50 mg", name: "Catswill", flavor: "Фанта апельсин с кислой малиной", price: 15, oldPrice: null, stock: 2 },
-
-      // Бронь — Hotspot Fuel (16 BYN, 50 mg, по 1 шт.)
-      { id: 26, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Ананас Кокос", price: 16, oldPrice: null, stock: 1 },
-      { id: 27, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Яблоко Груша", price: 16, oldPrice: null, stock: 1 },
-      { id: 28, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Смородина Мята", price: 16, oldPrice: null, stock: 1 },
-      { id: 29, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Киви Банан", price: 16, oldPrice: null, stock: 1 },
-      { id: 30, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Личи Лайм", price: 16, oldPrice: null, stock: 1 },
-      { id: 31, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Манго Персик", price: 16, oldPrice: null, stock: 1 },
-      { id: 32, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Дыня Черника", price: 16, oldPrice: null, stock: 1 },
-      { id: 33, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Кислые Лесные Ягоды", price: 16, oldPrice: null, stock: 1 },
-      { id: 34, category: "Бронь", img: IMG_HOTSPOT, tag: "Бронь • 50 mg", name: "Hotspot Fuel", flavor: "Зелёная Мята Персик Кактус", price: 16, oldPrice: null, stock: 1 }
+      { id: 14, category: "Услуги", img: "https://i.postimg.cc/3NfHNgDv/IMG-9833.jpg", tag: "Услуги", name: "Взять сигаретку", flavor: "Наличие уточнять в ЛС", price: 0, oldPrice: null, stock: null }
     ];
 
     // ================= ЛОГИКА =================
@@ -1587,13 +1553,6 @@
         const note = document.createElement("div");
         note.className = "service-limit-note";
         note.innerHTML = "🎁 <b>Бесплатно</b> • Одна на человека";
-        el.appendChild(note);
-      } else if (currentCategory === "Бронь" || currentCategory === "Картриджи") {
-        const note = document.createElement("div");
-        note.className = "bron-limit-note";
-        note.textContent = currentCategory === "Картриджи"
-          ? "⏳ Картриджи пока только в бронь — напишем, когда будет в наличии"
-          : "⏳ Бронируй заранее — напишем, когда будет в наличии";
         el.appendChild(note);
       }
 
